@@ -20,7 +20,7 @@ var todos = [
 ];
 
 app.get('/todos', (req, res) => {
-  var q = req.query.q.toLowerCase();
+  var q = req.query.q;
   var filterTodos = todos;
   if(!q) {
     res.render('todos',{
@@ -29,7 +29,7 @@ app.get('/todos', (req, res) => {
       });
   } else {
     filterTodos = todos.filter((val)=>{
-      return val.toLowerCase().indexOf(q) !== -1;
+      return val.toLowerCase().indexOf(q.toLowerCase()) !== -1;
     });
     res.render('todos',{
       name: 'Long',
