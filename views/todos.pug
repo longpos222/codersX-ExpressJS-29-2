@@ -6,4 +6,8 @@ form(action="/todos", method="get")
 p Todos List:
   ul
     each val in todos
-     li= `${name} ${val}`
+     li= `${val}`
+
+form(action="/todos/create", method="post")
+  input(type="text", name="todo", value=value)
+  button Create

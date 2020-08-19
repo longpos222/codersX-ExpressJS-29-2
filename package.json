@@ -2,10 +2,14 @@
  "main": "index.js",
  "scripts": {
   "debug": "node --inspect index.js",
-  "start": "node index.js"
+  "start": "nodemon index.js"
  },
  "dependencies": {
+  "body-parser": "^1.19.0",
   "express": "^4.17.1",
   "pug": "^3.0.0"
+ },
+ "devDependencies": {
+  "nodemon": "^2.0.4"
  }
 }
