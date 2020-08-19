@@ -1,0 +1,30 @@
+h2 
+  a(href='/') Home Page
+
+form(action="/users", method="get")
+  label(for='name') Name: 
+  input#name(type="text", name="q", value=value)
+  br
+  br
+  button(type="submit") Search user
+
+p Users List:
+  ul
+    each val in users
+     li= `${val.name}`
+      | 
+      a(href=`/users/${val._id}/delete`) Delete
+       | 
+      a(href=`/users/${val._id}/update`) Update name
+       | 
+
+form(action="/users/add", method="post")
+  label(for='name') Name: &nbsp;&nbsp;
+  input#name(type="text", name="name")
+  br
+  br
+  label(for='description') Email: &nbsp;
+  input#description(type="text", name="email")
+  br
+  br
+  button Add user

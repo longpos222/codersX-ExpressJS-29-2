@@ -11,8 +11,10 @@ form(action="/books", method="get")
 p Books List:
   ul
     each val in books
-     li= `${val.title} `
-      a(href=`/books/${val._id}/delete`) Delete &nbsp;&nbsp;
+     li= `${val.title}`
+      | 
+      a(href=`/books/${val._id}/delete`) Delete
+       | 
       a(href=`/books/${val._id}/update`) Update title
 
 form(action="/books/add", method="post")

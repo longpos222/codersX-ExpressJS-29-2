@@ -14,7 +14,7 @@ app.set('view engine','pug');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
-
+//======HOME PAGE=================================================
 app.get('/',function (req, res) {
   res.render('index',{
     title: 'Book Store App',
@@ -22,6 +22,7 @@ app.get('/',function (req, res) {
   });
 });
 
+//=======BOOKS=====================================================
 app.get('/books', (req, res) => {
   var q = req.query.q;
   var books = db.get('books').value();
@@ -68,7 +69,54 @@ app.post('/books/:_id/update', (req, res) => {
 
 });
 
-app.listen(port, () => {
-console.log(`Server is listening at port http://localhost:${port}/`);
+//========USERS==============================================
+app.get('/users', (req, res) => {
+  var q = req.query.q;
+  var users = db.get('users').value();
+  if(!q) {
+    res.render('users/index',{
+        users: users,
+        value: q
+      });
+  } else {
+    filterUsers = users.filter((val)=>{
+      return val.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+    });
+    res.render('users/index',{
+      users: filterUsers,
+      value: q
+    });
+  }
 });
 
+app.post('/users/add', (req, res) => {
+  req.body._id = shortid();
+  db.get('users').push(req.body).write();
+  res.redirect('/users');
+}); 
+
+app.get('/users/:_id/delete', (req, res) => {
+  db.get('users').remove({_id : req.params._id}).write();
+  res.redirect('/users');
+});
+
+app.get('/users/:_id/update', (req, res) => {
+  var [user] = db.get('users').filter({_id : req.params._id}).value();
+  res.render('users/update',{
+    user: user
+  });
+});
+
+app.post('/users/:_id/update', (req, res) => {
+  db.get('users')
+  .find({_id : req.params._id})
+  .assign({name: req.body.name})
+  .write();
+  res.redirect('/users');
+
+});
+
+//======================================
+app.listen(port, () => {
+console.log(`Server is running at http://localhost:${port}/`);
+});

@@ -1,0 +1,13 @@
+h2 
+  a(href='/') Home Page
+
+h3 Users details:
+p <strong>Name:</strong> #{user.name}
+p <strong>Email:</strong> #{user.email}
+  
+form(action="/users/"+user._id+"/update", method="post")
+  label(for='name') New name: &nbsp;&nbsp;
+  input#name(type="text", name="name")
+  br
+  br
+  button Update user name
