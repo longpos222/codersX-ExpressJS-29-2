@@ -6,7 +6,8 @@ form(action="/todos", method="get")
 p Todos List:
   ul
     each val in todos
-     li= `${val.action}`
+     li= `${val.action} `
+      a(href=`/todos/${val._id}/delete`) Del
 
 form(action="/todos/create", method="post")
   input(type="text", name="action", value=value)

@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
+const shortid = require('shortid');
 
 const app = express();
 const port = 3000;
@@ -41,7 +42,13 @@ app.get('/todos', (req, res) => {
 });
 
 app.post('/todos/create', (req, res) => {
+  req.body._id = shortid();
   db.get('todos').push(req.body).write();
+  res.redirect('/todos');
+}); 
+
+app.get('/todos/:_id/delete', (req, res) => {
+  db.get('todos').remove({_id : req.params._id}).write();
   res.redirect('/todos');
 });
 

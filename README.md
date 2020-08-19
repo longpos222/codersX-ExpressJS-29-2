@@ -1,12 +1,5 @@
-# codersX-ExpressJS-06
+# codersX-ExpressJS-07-1
 ### BÀI 1
-1) Thêm một file db.json vào project với nội dung như sau:
-```javascript
-{
-  "todos": [
-    { "id": 1, "text": "blah" }
-  ]
-}
-```
-2) Sử dụng lowdb thay cho việc hard-code một array như các bài trước
-Lưu ý: Khi thay đổi data type, bạn cần update lại những đoạn code consume data đó
+1) Thêm một đường link (sử dụng thẻ a) có label là: Xoá, đặt bên cạnh mỗi list item (cho vào trong thẻ li, kế sau text)
+2) Đường link ở trên trỏ tới `/todos/<id>/delete` trong đó `<id>` là ID của mỗi item
+3) Tạo một route như nói ở 2), làm nhiệm vụ: xoá item ra khỏi database; quay lại trang `/todos`
