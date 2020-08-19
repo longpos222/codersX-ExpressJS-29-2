@@ -25,7 +25,8 @@ app.get('/todos', (req, res) => {
   if(!q) {
     res.render('todos',{
         name: 'Long',
-        todos: todos
+        todos: todos,
+        value: q
       });
   } else {
     filterTodos = todos.filter((val)=>{
@@ -33,7 +34,8 @@ app.get('/todos', (req, res) => {
     });
     res.render('todos',{
       name: 'Long',
-      todos: filterTodos
+      todos: filterTodos,
+      value: q
     });
   }
 });
