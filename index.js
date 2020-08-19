@@ -1,21 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
 
 const app = express();
 const port = 3000;
+const adapter = new FileSync('db.json');
+const db = low(adapter);
 
 app.set('views', './views');
 app.set('view engine','pug');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
-
-var todos = [
-  'Đi chợ',
-  'Nấu cơm',
-  'Rửa bát',
-  'Học code tại CodersX'
-];
 
 app.get('/',function (req, res) {
   res.render('index',{
@@ -26,7 +23,7 @@ app.get('/',function (req, res) {
 
 app.get('/todos', (req, res) => {
   var q = req.query.q;
-  var filterTodos = todos;
+  var todos = db.get('todos').value();
   if(!q) {
     res.render('todos',{
         todos: todos,
@@ -34,10 +31,9 @@ app.get('/todos', (req, res) => {
       });
   } else {
     filterTodos = todos.filter((val)=>{
-      return val.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+      return val.action.toLowerCase().indexOf(q.toLowerCase()) !== -1;
     });
     res.render('todos',{
-      name: 'Long',
       todos: filterTodos,
       value: q
     });
@@ -45,8 +41,7 @@ app.get('/todos', (req, res) => {
 });
 
 app.post('/todos/create', (req, res) => {
-  var todo = req.body.todo;
-  todos.push(todo);
+  db.get('todos').push(req.body).write();
   res.redirect('/todos');
 });
 

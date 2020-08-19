@@ -1,4 +1,12 @@
-# codersX-ExpressJS-04
-### BÀI 1 
-1) Đưa các bài tập bạn đã làm lên Github.
-2) Paste đường link tới Github của bạn dạng: `github.com/<username>` vào phần gửi kết quả (để đảm bảo bạn có làm việc này)
+# codersX-ExpressJS-06
+### BÀI 1
+1) Thêm một file db.json vào project với nội dung như sau:
+```javascript
+{
+  "todos": [
+    { "id": 1, "text": "blah" }
+  ]
+}
+```
+2) Sử dụng lowdb thay cho việc hard-code một array như các bài trước
+Lưu ý: Khi thay đổi data type, bạn cần update lại những đoạn code consume data đó
