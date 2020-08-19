@@ -17,39 +17,55 @@ app.use(bodyParser.urlencoded({extended : true}));
 
 app.get('/',function (req, res) {
   res.render('index',{
-    title: 'codersX-ExpressJS',
-    message: 'codersX Todos App'
+    title: 'Book Store App',
+    message: 'codersX Book Store App'
   });
 });
 
-app.get('/todos', (req, res) => {
+app.get('/books', (req, res) => {
   var q = req.query.q;
-  var todos = db.get('todos').value();
+  var books = db.get('books').value();
   if(!q) {
-    res.render('todos',{
-        todos: todos,
+    res.render('books/index',{
+        books: books,
         value: q
       });
   } else {
-    filterTodos = todos.filter((val)=>{
-      return val.action.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+    filterBooks = books.filter((val)=>{
+      return val.title.toLowerCase().indexOf(q.toLowerCase()) !== -1;
     });
-    res.render('todos',{
-      todos: filterTodos,
+    res.render('books/index',{
+      books: filterBooks,
       value: q
     });
   }
 });
 
-app.post('/todos/create', (req, res) => {
+app.post('/books/add', (req, res) => {
   req.body._id = shortid();
-  db.get('todos').push(req.body).write();
-  res.redirect('/todos');
+  db.get('books').push(req.body).write();
+  res.redirect('/books');
 }); 
 
-app.get('/todos/:_id/delete', (req, res) => {
-  db.get('todos').remove({_id : req.params._id}).write();
-  res.redirect('/todos');
+app.get('/books/:_id/delete', (req, res) => {
+  db.get('books').remove({_id : req.params._id}).write();
+  res.redirect('/books');
+});
+
+app.get('/books/:_id/update', (req, res) => {
+  var [book] = db.get('books').filter({_id : req.params._id}).value();
+  res.render('books/update',{
+    book: book
+  });
+});
+
+app.post('/books/:_id/update', (req, res) => {
+  db.get('books')
+  .find({_id : req.params._id})
+  .assign({title: req.body.title})
+  .write();
+  res.redirect('/books');
+
 });
 
 app.listen(port, () => {

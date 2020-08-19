@@ -1,5 +1,12 @@
-# codersX-ExpressJS-07-1
-### BÀI 1
-1) Thêm một đường link (sử dụng thẻ a) có label là: Xoá, đặt bên cạnh mỗi list item (cho vào trong thẻ li, kế sau text)
-2) Đường link ở trên trỏ tới `/todos/<id>/delete` trong đó `<id>` là ID của mỗi item
-3) Tạo một route như nói ở 2), làm nhiệm vụ: xoá item ra khỏi database; quay lại trang `/todos`
+# codersX-ExpressJS-07-2
+### BÀI 2
+Đây là một bài luyện tập lại các kiến thức đã học:
+1. Tạo project mới ở Glitch (sử dụng hello-express template)
+2. Tạo một trang quản lý sách mà bạn có (route /books)
+3. Đảm bảo có đủ chức năng:
+  -Hiển thị toàn bộ sách đang có (danh sách các title)
+  -Thêm sách (chỉ cần field title - tiêu đề sách, description - mô tả sách)
+  -Update tiêu đề sách
+  -Xoá sách
+
+**Chú ý: Sử dụng lowdb**

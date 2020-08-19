@@ -1,0 +1,13 @@
+h2 
+  a(href='/') Home Page
+
+h3 Books details:
+p <strong>Title:</strong> #{book.title}
+p <strong>Description:</strong> #{book.description}
+  
+form(action="/books/"+book._id+"/update", method="post")
+  label(for='title') New title: &nbsp;&nbsp;
+  input#title(type="text", name="title")
+  br
+  br
+  button Update book title
