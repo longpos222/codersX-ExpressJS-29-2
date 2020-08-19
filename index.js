@@ -48,7 +48,7 @@ app.post('/todos/create', (req, res) => {
   var todo = req.body.todo;
   todos.push(todo);
   res.redirect('/todos');
-})
+});
 
 app.listen(port, () => {
 console.log(`Server is listening at port http://localhost:${port}/`);
