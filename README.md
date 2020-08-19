@@ -1,11 +1,4 @@
-# codersX-ExpressJS
+# codersX-ExpressJS-02
 ### BÀI 1
-- Thêm một route: /todos trả về một danh sách các việc phải làm (dùng thẻ ul, li) như sau:
-  - Đi chợ
-  - Nấu cơm
-  - Rửa bát
-  - Học code tại CodersX
 
-**Lưu ý:**
-Chỉ làm vừa đủ theo yêu cầu
-Chỉ dùng HTML, không cần CSS
+Sử dụng pug template để viết lại route /todos

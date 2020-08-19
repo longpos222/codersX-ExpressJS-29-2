@@ -2,17 +2,26 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+app.set('views', './views');
+app.set('view engine','pug');
+
 app.get('/',function (req, res) {
-  res.send('Hello world!');
+  res.render('index',{
+    title: 'codersX-ExpressJS',
+    message: 'Hello codersX'
+  });
 });
 
-app.get('/todos', (req, res) => {
-  res.send('<ul><li>Đi chợ</li><li>Nấu cơm</li><li>Rửa bát</li><li>Học code tại CodersX</li></ul>');
-}
+var todos = ['Đi chợ','Nấu cơm','Rửa bát','Học code tại CodersX']
 
-);
+app.get('/todos', (req, res) => {
+  res.render('todos',{
+    name: 'Long',
+    todos: todos
+  });
+});
 
 app.listen(port, () => {
-console.log('Server is listening at port ', port);
+console.log(`Server is listening at port http://localhost:${port}/`);
 });
 
