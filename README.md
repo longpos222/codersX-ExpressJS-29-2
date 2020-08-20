@@ -1,6 +1,6 @@
-# codersX-ExpressJS-08-2
-### BÀI 3
-Bạn chợt nhận ra là giả sử bây giờ có một người đến thuê, làm thế nào để biết ai đang thuê cuốn nào? Bạn cần phải có thêm 1 collection chứa các transaction của việc thuê sách. Mỗi object trong collection này sẽ chứa: userId, bookId, tất nhiên chúng sẽ có 1 property id riêng của mình.
-1) Update lại file db json của bạn
-2) Thêm route /transactions hiển thị các transactions đã tạo. 3) Thêm trạng /transactions/create chứa form gồm 2 field là 2 dropdown (sử dụng select và option để giải quyết). Một dropdown dành cho các user, 1 dropdown dành cho việc chọn sách. Đừng quên nút Create để tạo mới.
-4) Action của form trên có thể để /transactions/create (hoặc để trống sẽ tự hiểu là POST lên URL hiện tại) và method là POST (of course)
+# codersX-ExpressJS-09-2
+### BÀI 2
+Bạn chợt nhận ra khi một người trả sách cho mình, mình không biết làm sao để đánh dấu là `transaction` đã được hoàn thành. Bạn bèn nghĩ ra việc thêm 1 `field` mới cho mỗi transaction là `isComplete` (boolean) nếu nó là `true` thì có nghĩa là `transaction` đã hoàn thành, sách đã được trả.
+1) Thêm một link *Hoàn thành* ở mỗi transaction ở màn hình `/transactions`
+2) Link này trỏ tới `/transactions/<id>/complete` trong đó <id> đại diện cho ID của transaction ở dòng đó
+3) Bạn tự hiểu logic phải làm gì rồi đúng không?

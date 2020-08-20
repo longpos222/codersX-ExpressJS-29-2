@@ -27,3 +27,18 @@ module.exports.add = (req, res) => {
   db.get('transactions').push(req.body).write();
   res.redirect('/transactions');
 };
+
+module.exports.complete = (req, res) => {
+  var transactions = db
+    .get('transactions')
+    .find({_id : req.params._id})
+    .value();
+  if(!transactions.isComplete){
+    db
+    .get('transactions')
+    .find({_id : req.params._id})
+    .assign({isComplete: true})
+    .write();
+  }
+  res.redirect('/transactions');
+};

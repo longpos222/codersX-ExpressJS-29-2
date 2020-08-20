@@ -1,11 +1,6 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
+const controller = require('../controllers/index.controller.js');
 
-router.get('/',function (req, res) {
-  res.render('index',{
-    title: 'Book Store App',
-    message: 'codersX Book Store App'
-  });
-});
+router.get('/', controller.index);
 
 module.exports = router;

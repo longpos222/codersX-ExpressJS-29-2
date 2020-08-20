@@ -14,12 +14,9 @@ app.set('view engine','pug');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
-
 app.use('/', indexRoute);
 app.use('/books', bookRoute);
 app.use('/transactions', transactionRoute);
 app.use('/users', userRoute);
 
-app.listen(port, () => {
-console.log(`Server is running at localhost:${port}`);
-});
+app.listen(port,()=>console.log(`OK ${port}`));

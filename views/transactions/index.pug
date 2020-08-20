@@ -14,8 +14,9 @@ p Transactions List:
      li= `User name: ${val.userName}.   Book title: ${val.bookTitle}`
       | 
       a(href=`/transactions/${val._id}/delete`) Delete
-      //-  | 
-      //- a(href=`/transactions/${val._id}/update`) Update status
+       | 
+      if val.isCom 
+      a(href=`/transactions/${val._id}/complete`) Done !
 
 form(action="/transactions/add", method="post")
   label(for="userId") User name: &nbsp;
