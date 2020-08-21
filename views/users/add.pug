@@ -8,6 +8,6 @@ block content
   form(action="/users/add", method="post")
     label(for='name') Name:
     input#name(type="text", name="name", value=user ? user.name : "")
-    label(for='description') Email:
-    input#description(type="email", name="email", value=user ? user.email : '')
+    label(for='email') Email:
+    input#email(type="email", name="email", value=user ? user.email : '')
     button Add user
