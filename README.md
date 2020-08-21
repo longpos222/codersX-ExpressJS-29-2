@@ -1,5 +1,6 @@
 # codersX-ExpressJS-11-1
-###  BÀI 1
-- Tạo một folder public có chứa 1 file favicon.png (upload từ máy, là một logo png cỡ 64x64, bạn có thể tạo bằng kiến thức học ở chuỗi UI Design)
-- Google xem favicon là gì và làm sao để có thể setup được nó trong layout của mình
-- Preview project của bạn ở một cửa sổ mới và tận hưởng thành quả
+###  BÀI 2
+- Thêm một file `custom.css` vào thư mục public đã tạo
+3) Thêm nội dung cho file css: `* { display: none !important; }`
+4) Nhúng file css này vào layout của bạn (internal css)
+5) Reload lại và tận hưởng thành quả
