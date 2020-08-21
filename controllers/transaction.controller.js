@@ -1,5 +1,6 @@
 const db = require('../db');
 const shortid = require('shortid');
+const { brotliCompress } = require('zlib');
 
 module.exports.index = (req, res) => {
   var transactions = db.get('transactions').value();
@@ -28,11 +29,17 @@ module.exports.add = (req, res) => {
   res.redirect('/transactions');
 };
 
-module.exports.complete = (req, res) => {
+module.exports.complete = (req, res) => {  
   var transactions = db
     .get('transactions')
     .find({_id : req.params._id})
     .value();
+
+  if(!transactions) {
+    res.send('<h2>ID is not existed.</h2></br><h2><a href="/">Home Page</a></h2>')
+    return;
+  }
+    
   if(!transactions.isComplete){
     db
     .get('transactions')

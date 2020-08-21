@@ -1,7 +1,9 @@
 extends ../layouts/common
 
 block content
-
+  if errors
+    each error in errors
+      alert.alert-danger= error
   p Transactions List:
     ul
       each val in transactions
