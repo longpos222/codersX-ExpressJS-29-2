@@ -1,4 +1,5 @@
-# codersX-ExpressJS-09-2
-### BÀI 1
-Tích hợp Bootstrap phiên bản 4 (hiện tại) kèm thêm 1 thanh header ở trên chứa 3 menu: Users, Books, Transactions thì trang web sẽ đẹp lên biết bao.
-Bắt tay vào làm thôi. Let's get your feet wet!
+# codersX-ExpressJS-11-1
+###  BÀI 1
+- Tạo một folder public có chứa 1 file favicon.png (upload từ máy, là một logo png cỡ 64x64, bạn có thể tạo bằng kiến thức học ở chuỗi UI Design)
+- Google xem favicon là gì và làm sao để có thể setup được nó trong layout của mình
+- Preview project của bạn ở một cửa sổ mới và tận hưởng thành quả
