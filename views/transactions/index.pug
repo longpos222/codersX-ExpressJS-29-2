@@ -1,34 +1,23 @@
-h2 
-  a(href='/') Home Page
+extends ../layouts/common
 
-//- form(action="/transactions", method="get")
-//-   label(for='title') Title: 
-//-   input#title(type="text", name="q", value=value)
-//-   br
-//-   br
-//-   button(type="submit") Search book
+block content
 
-p Transactions List:
-  ul
-    each val in transactions
-     li= `User name: ${val.userName}.   Book title: ${val.bookTitle}`
-      | 
-      a(href=`/transactions/${val._id}/delete`) Delete
-       | 
-      if val.isCom 
-      a(href=`/transactions/${val._id}/complete`) Done !
+  p Transactions List:
+    ul
+      each val in transactions
+        li= `User name: ${val.userName}. Book title: ${val.bookTitle}`
+          a(href=`/transactions/${val._id}/delete`) Delete
+          a(href=`/transactions/${val._id}/complete`) Done !
 
-form(action="/transactions/add", method="post")
-  label(for="userId") User name: &nbsp;
-  select#userId(name="userId")
-    each val in users
-      option(value=val._id) #{val.name}
-  br
-  br
-  label(for="bookId") Book title: &nbsp;
-  select#bookId(name="bookId")
-    each val in books
-      option(value=val._id) #{val.title}
-  br
-  br
-  button Add transaction
+  form(action="/transactions/add", method="post")
+    label(for="userId") User name: &nbsp;
+    select#userId(name="userId")
+      each val in users
+        option(value=val._id) #{val.name}
+    
+    label(for="bookId") Book title: &nbsp;
+    select#bookId(name="bookId")
+      each val in books
+        option(value=val._id) #{val.title}
+    
+    button Add transaction

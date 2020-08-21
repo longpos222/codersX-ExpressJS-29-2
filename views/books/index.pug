@@ -1,29 +1,22 @@
-h2 
-  a(href='/') Home Page
+extends ../layouts/common
 
-form(action="/books", method="get")
-  label(for='title') Title: 
-  input#title(type="text", name="q", value=value)
-  br
-  br
-  button(type="submit") Search book
+block content
 
-p Books List:
-  ul
-    each val in books
-     li= `${val.title}`
-      | 
-      a(href=`/books/${val._id}/delete`) Delete
-       | 
-      a(href=`/books/${val._id}/update`) Update title
+  form(action="/books", method="get")
+    label(for='title') Title: 
+    input#title(type="text", name="q", value=value)
+    button(type="submit") Search book
 
-form(action="/books/add", method="post")
-  label(for='title') Title: &nbsp;&nbsp;
-  input#title(type="text", name="title")
-  br
-  br
-  label(for='description') Desc: &nbsp;
-  input#description(type="text", name="description")
-  br
-  br
-  button Add book
+  p Books List:
+    ul
+      each val in books
+        li= `${val.title}`
+          a(href=`/books/${val._id}/delete`) Delete
+          a(href=`/books/${val._id}/update`) Update title
+
+  form(action="/books/add", method="post")
+    label(for='title') Title: &nbsp;&nbsp;
+    input#title(type="text", name="title")
+    label(for='description') Desc: &nbsp;
+    input#description(type="text", name="description")
+    button Add book
