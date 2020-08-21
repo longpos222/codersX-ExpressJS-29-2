@@ -1,5 +1,5 @@
-# codersX-ExpressJS-12-2
-###  BÀI 2
+# codersX-ExpressJS-13
+###  BÀI 1
 
-- Thêm validation cho trang tạo user, check xem tên user có > 30 ký tự thì không cho phép nhập, quay lại trang tạo user và hiển thị lỗi
-
+- Chuyển phần validation qua dạng middleware (trừ logic kiểm tra transaction tồn tại hay không trước khi complete)
+  

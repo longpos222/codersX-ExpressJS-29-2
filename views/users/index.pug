@@ -3,7 +3,7 @@ extends ../layouts/common
 block content
   if errors
     each error in errors
-      alert.alert-danger= error
+      p.alert.alert-danger= error
 
   form(action="/users", method="get")
     label(for='name') Name: 
@@ -15,9 +15,4 @@ block content
         li= `${val.name}`
           a(href=`/users/${val._id}/delete`) Delete
           a(href=`/users/${val._id}/update`) Update name
-  form(action="/users/add", method="post")
-    label(for='name') Name:
-    input#name(type="text", name="name")
-    label(for='description') Email:
-    input#description(type="email", name="email")
-    button Add user
+  a.btn.btn-primary(href=`/users/add`) Add new user

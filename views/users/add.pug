@@ -1,0 +1,13 @@
+extends ../layouts/common
+
+block content
+  if errors
+    each error in errors
+      p.alert.alert-danger= error
+
+  form(action="/users/add", method="post")
+    label(for='name') Name:
+    input#name(type="text", name="name", value=user ? user.name : "")
+    label(for='description') Email:
+    input#description(type="email", name="email", value=user ? user.email : '')
+    button Add user
