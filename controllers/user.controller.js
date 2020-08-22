@@ -1,5 +1,6 @@
 const db = require('../db.js');
 const shortid = require('shortid');
+const md5 = require("md5");
 
 module.exports.index = (req, res) => {
   var q = req.query.q;

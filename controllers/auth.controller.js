@@ -1,3 +1,4 @@
+const md5 = require('md5');
 const db = require('../db.js');
 
 module.exports.login = (req, res) => {
@@ -16,7 +17,7 @@ module.exports.postLogin = (req, res) => {
     return;
   }
 
-  if(authUser.password != req.body.password) {
+  if(authUser.password != md5(req.body.password)) {
     res.render('auth/login',{
       errors: ['Wrong password.'],
       user: authUser
