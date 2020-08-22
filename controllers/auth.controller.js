@@ -1,6 +1,10 @@
 const db = require('../db.js');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+require('dotenv').config();
+
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports.login = (req, res) => {
   res.render('auth/login');
@@ -18,7 +22,17 @@ module.exports.postLogin = async (req, res) => {
     return;
   }
 
+  const msg = {
+    to: authUser.email,
+    from: process.env.SENDGRID_EMAIL,
+    subject: "Security alert: new or unusual login",
+    text:
+      "Looks like there was a login attempt from a new device or location. Your account has been locked.",
+    html: "<strong>Your account has been locked.</strong>"
+  };
+
   if(authUser.wrongLoginCount > 3) {
+    sgMail.send(msg);
     res.render('auth/login',{
       errors: ['Your account is locked.'],
       user: authUser
@@ -38,6 +52,6 @@ module.exports.postLogin = async (req, res) => {
     return;
   }
   
-  res.cookie('userId', authUser._id, { signed: true});
+  res.cookie('userId', authUser._id, {signed: true});
   res.redirect('/transactions/');
 };
