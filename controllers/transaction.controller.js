@@ -5,12 +5,12 @@ module.exports.index = (req, res) => {
   var transactions = db.get('transactions').value();
   var books = db.get('books').value();
   var users = db.get('users').value();
-  var authUser = db.get('users').find({_id: req.cookies.userId}).value();
+  var authUser = db.get('users').find({_id: req.signedCookies.userId}).value();
 
   if(!authUser.isAdmin) {
     transactions = [
       db.get('transactions')
-        .find({userId: req.cookies.userId})
+        .find({userId: req.signedCookies.userId})
         .value()
     ];
   }

@@ -38,6 +38,6 @@ module.exports.postLogin = async (req, res) => {
     return;
   }
   
-  res.cookie('userId', authUser._id);
+  res.cookie('userId', authUser._id, { signed: true});
   res.redirect('/transactions/');
 };

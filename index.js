@@ -20,7 +20,7 @@ app.set('view engine','pug');
 app.use(express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
-app.use(cookieParser());
+app.use(cookieParser("codersx"));
 //app.use(cookieMiddleware.createCookie);
 //app.use(cookieMiddleware.countCookie);
 
