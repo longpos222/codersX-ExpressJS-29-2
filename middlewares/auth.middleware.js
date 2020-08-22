@@ -1,4 +1,3 @@
-const { renderFile } = require('pug');
 const db = require('../db');
 
 module.exports.authRequire = (req, res, next) => {
