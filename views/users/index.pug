@@ -15,4 +15,16 @@ block content
         li= `${val.name}`
           a(href=`/users/${val._id}/delete`) Delete
           a(href=`/users/${val._id}/update`) Update name
+  nav
+    ul.pagination
+      if(pageFoot.prevPage != 0)
+        li.page-item
+          a.page-link(href="/users?page="+pageFoot.prevPage) &laquo;
+      li.page-item
+        a.page-link(href="/users?page="+pageFoot.page) Page #{pageFoot.page}
+      if(pageFoot.nextPage != pageFoot.maxPage)
+        li.page-item
+          a.page-link(href="/users?page="+pageFoot.nextPage) &raquo;
+
+
   a.btn.btn-primary(href=`/users/add`) Add new user

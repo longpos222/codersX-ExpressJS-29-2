@@ -28,6 +28,6 @@ html(lang="en")
             a.nav-link(href="/books") Books List
           li.nav-item
             a.nav-link(href="/transactions") Transactions List
-      p=user.name
+      p=user ? user.name : "Guest"
     block content
     block footer

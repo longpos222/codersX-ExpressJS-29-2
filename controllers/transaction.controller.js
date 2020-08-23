@@ -26,10 +26,23 @@ module.exports.index = (req, res) => {
     var bookTitle = getDetail(books,"bookId",tranx,"title");
     return {_id, userName, bookTitle};
   });
+  
+  var page = parseInt(req.query.page) || 1;
+  var pageStep = 3;
+  var startPage = (page - 1) * pageStep;
+  var maxPage = transactions.length % pageStep == 0 ? Math.floor(transactions.length / pageStep) : Math.floor(transactions.length / pageStep) + 1;
+
+  transactions = transactions.slice(startPage, startPage + pageStep);
+  
+  var prevPage = (page-1) < 0 ? 0 : (page-1);
+  var nextPage = (page+1) > maxPage ? maxPage : (page+1);
+  var pageFoot = {prevPage, page, nextPage, maxPage};
+
   res.render('transactions/index',{
     transactions,
     users,
-    books
+    books,
+    pageFoot
   });
 };
 

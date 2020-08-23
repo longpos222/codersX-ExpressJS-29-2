@@ -1,24 +1,33 @@
 const db = require('../db.js');
 const shortid = require('shortid');
-const md5 = require("md5");
 
 module.exports.index = (req, res) => {
   var q = req.query.q;
   var users = db.get('users').value();
-  if(!q) {
-    res.render('users/index',{
-        users: users,
-        value: q
-      });
-  } else {
+  var filterUsers = users;
+  
+  if(q) {
     filterUsers = users.filter((val)=>{
       return val.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
     });
-    res.render('users/index',{
-      users: filterUsers,
-      value: q
-    });
-  }
+  } 
+
+  var page = parseInt(req.query.page) || 1;
+  var pageStep = 3;
+  var startPage = (page - 1) * pageStep;
+  var maxPage = filterUsers.length % pageStep == 0 ? Math.floor(filterUsers.length / pageStep) : Math.floor(filterUsers.length / pageStep) + 1;
+
+  filterUsers = filterUsers.slice(startPage, startPage + pageStep);
+  
+  var prevPage = (page-1) < 0 ? 0 : (page-1);
+  var nextPage = (page+1) > maxPage ? maxPage : (page+1);
+  var pageFoot = {prevPage, page, nextPage, maxPage};
+
+  res.render('users/index',{
+    users: filterUsers,
+    value: q,
+    pageFoot
+  });
 };
 
 module.exports.add = (req, res) => {
