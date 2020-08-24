@@ -1,0 +1,16 @@
+extends ../layouts/common
+
+block content
+
+  form
+    p User information:
+    img(src=user.avatarUrl, alt="user-avatar", "width"=100, "height"=100)
+    a.btn.btn-primary(href=`/users/profile/avatar`) Update avatar
+    p= `User name: ${user.name}`
+    p= `User ID: ${user._id}`
+    p= `Phone: ${user.phone}`
+    p= `Email: ${user.email}`
+    p= `Role: ${user.role == true ? "Admin" : "User"}` 
+    a(href=`/users/${user._id}/update`) Update name
+    a(href=`/users/${user._id}/delete`) Delete account
+  

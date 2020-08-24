@@ -12,7 +12,7 @@ block content
   p Users List:
     ul
       each val in users
-        li= `${val.name}`
+        li= `${val.name} ${val._id} ${val.email}`
           a(href=`/users/${val._id}/delete`) Delete
           a(href=`/users/${val._id}/update`) Update name
   nav

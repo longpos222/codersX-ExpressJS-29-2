@@ -1,5 +1,15 @@
-const db = require('../db.js');
-const shortid = require('shortid');
+const db = require("../db");
+
+const shortid = require("shortid");
+const dotenv = require("dotenv").config();
+const cloudinary = require("cloudinary").v2;
+const streamifier = require("streamifier");
+
+cloudinary.config({
+  cloud_name: "longpos",
+  api_key: '539956542419582',
+  api_secret: "B-_BUmN4qBu-NBfI35JC_v89yGs"
+});
 
 module.exports.index = (req, res) => {
   var q = req.query.q;
@@ -58,4 +68,48 @@ module.exports.postUpdate = (req, res) => {
   .assign({name: req.body.name})
   .write();
   res.redirect('/users');
+};
+
+module.exports.profile = (req, res) => {
+  var authUser = db
+    .get('users')
+    .find({_id: req.signedCookies.userId})
+    .value();
+
+  res.render('users/profile',{
+    users: authUser
+  });
+};
+
+module.exports.avatar = (req, res) => {
+  var authUser = db
+    .get('users')
+    .find({_id: req.signedCookies.userId})
+    .value();
+
+  res.render('users/avatar',{
+    users: authUser
+  });
+};
+
+module.exports.updateAvatar = async (req, res) => {
+  var authUser = db
+    .get("users")
+    .find({ _id: req.signedCookies.userId })
+    .value();
+
+  let cld_upload_stream = await cloudinary.uploader.upload_stream(
+    {
+      public_id: authUser._id + "_avatar",
+      invalidate: true
+    },
+    (error, result) => {
+      db.get("users")
+        .find({ _id: req.signedCookies.userId })
+        .assign({ avatarUrl: result.url })
+        .write();
+      res.redirect("/users/profile");
+    }
+  );
+  streamifier.createReadStream(req.file.buffer).pipe(cld_upload_stream);
 };
