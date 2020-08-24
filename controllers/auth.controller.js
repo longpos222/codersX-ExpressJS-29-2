@@ -42,7 +42,9 @@ module.exports.postLogin = async (req, res) => {
   var result = await bcrypt.compare(req.body.password, authUser.password);
 
   if(!result) {
-    db.get('users').find({name: req.body.name}).update('wrongLoginCount', n => n + 1)
+    db.get('users')
+    .find({name: req.body.name})
+    .update('wrongLoginCount', n => n + 1)
     .write();
 
     res.render('auth/login',{
@@ -51,7 +53,17 @@ module.exports.postLogin = async (req, res) => {
     });
     return;
   }
-  
+
+  db.get('sessions')
+    .find({_id: req.signedCookies.sessionId})
+    .assign({"userId": authUser._id})
+    .write();
+
   res.cookie('userId', authUser._id, {signed: true});
   res.redirect('/transactions/');
+};
+
+module.exports.logout = (req, res) => {
+  res.cookie('userId',"", {signed: true});
+  res.redirect('/auth/login');
 };

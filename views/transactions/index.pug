@@ -7,7 +7,7 @@ block content
   p Transactions List:
     ul
       each val in transactions
-        li= `ID: ${val._id}. User name: ${val.userName}. Book title: ${val.bookTitle}`
+        li= `Tranx ID: ${val._id}. User name: ${val.userName}. Book title: ${val.bookTitle}`
           a(href=`/transactions/${val._id}/delete`) Delete
           a(href=`/transactions/${val._id}/complete`) Done !
   
@@ -18,7 +18,7 @@ block content
           a.page-link(href="/transactions?page="+pageFoot.prevPage) &laquo;
       li.page-item
         a.page-link(href="/transactions?page="+pageFoot.page) Page #{pageFoot.page}
-      if(pageFoot.nextPage != pageFoot.maxPage)
+      if(pageFoot.page != pageFoot.maxPage)
         li.page-item
           a.page-link(href="/transactions?page="+pageFoot.nextPage) &raquo;
 

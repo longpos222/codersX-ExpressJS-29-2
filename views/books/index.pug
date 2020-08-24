@@ -11,8 +11,10 @@ block content
     ul
       each val in books
         li= `${val.title} `
-          a(href=`/books/${val._id}/delete`) Delete 
-          a(href=`/books/${val._id}/detail`) Detail
+          a(href=`/cart/add/${val._id}`) Add to cart
+          if(user)
+            a(href=`/books/${val._id}/detail`) Detail
+            a(href=`/books/${val._id}/delete`) Delete
   if (user)
     form(action="/books/add", method="post")
       label(for='title') Title:

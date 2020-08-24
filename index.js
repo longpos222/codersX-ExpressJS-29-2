@@ -7,6 +7,7 @@ const bookRoute = require('./routers/book.route.js');
 const transactionRoute = require('./routers/transaction.route.js');
 const userRoute = require('./routers/user.route.js');
 const authRoute = require('./routers/auth.route.js');
+const cartRoute = require('./routers/cart.route.js');
 
 const sessionMiddleware = require('./middlewares/session.middleware');
 const authMiddleware = require('./middlewares/auth.middleware');
@@ -29,5 +30,6 @@ app.use('/books', bookRoute);
 app.use('/transactions', authMiddleware.authRequire, transactionRoute);
 app.use('/users', authMiddleware.authRequire,  userRoute);
 app.use('/auth', authRoute);
+app.use('/cart', cartRoute);
 
 app.listen(port,()=>console.log(`OK http://localhost:${port}`));
