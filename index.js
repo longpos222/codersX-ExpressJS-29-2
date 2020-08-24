@@ -8,7 +8,7 @@ const transactionRoute = require('./routers/transaction.route.js');
 const userRoute = require('./routers/user.route.js');
 const authRoute = require('./routers/auth.route.js');
 
-const cookieMiddleware = require('./middlewares/cookie.middleware');
+const sessionMiddleware = require('./middlewares/session.middleware');
 const authMiddleware = require('./middlewares/auth.middleware');
 
 const app = express();
@@ -21,11 +21,11 @@ app.use(express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(cookieParser("codersx"));
-//app.use(cookieMiddleware.createCookie);
+app.use(sessionMiddleware.create);
 //app.use(cookieMiddleware.countCookie);
 
 app.use('/', indexRoute);
-app.use('/books', authMiddleware.authRequire, bookRoute);
+app.use('/books', bookRoute);
 app.use('/transactions', authMiddleware.authRequire, transactionRoute);
 app.use('/users', authMiddleware.authRequire,  userRoute);
 app.use('/auth', authRoute);

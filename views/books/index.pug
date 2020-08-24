@@ -10,13 +10,13 @@ block content
   p Books List:
     ul
       each val in books
-        li= `${val.title}`
-          a(href=`/books/${val._id}/delete`) Delete
-          a(href=`/books/${val._id}/update`) Update title
-
-  form(action="/books/add", method="post")
-    label(for='title') Title: &nbsp;&nbsp;
-    input#title(type="text", name="title")
-    label(for='description') Desc: &nbsp;
-    input#description(type="text", name="description")
-    button Add book
+        li= `${val.title} `
+          a(href=`/books/${val._id}/delete`) Delete 
+          a(href=`/books/${val._id}/detail`) Detail
+  if (user)
+    form(action="/books/add", method="post")
+      label(for='title') Title:
+      input#title(type="text", name="title")
+      label(for='description') Desc:
+      input#description(type="text", name="description")
+      button Add book

@@ -1,0 +1,21 @@
+extends ../layouts/common
+
+block content
+
+  h3 Books details:
+  img(src=book.coverUrl, alt="book-cover", "width"=100, "height"=150)
+  
+  form(action="/books/"+book._id+"/detail/", method="post", enctype="multipart/form-data")
+    .form-group
+      label(for='book-cover') Upload your new cover:
+      input#book-cover.form-control-file(type='file', name="book-cover")
+      h6 Title: 
+      p= book.title
+      h6 Description: 
+      p= book.description
+      label(for='title') New title:
+      input#title(type="text", name="title")
+    button Submit
+  if errors
+    each error in errors
+      p.alert.alert-danger= error

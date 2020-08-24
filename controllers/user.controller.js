@@ -1,14 +1,13 @@
 const db = require("../db");
-
 const shortid = require("shortid");
 const dotenv = require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
 
 cloudinary.config({
-  cloud_name: "longpos",
-  api_key: '539956542419582',
-  api_secret: "B-_BUmN4qBu-NBfI35JC_v89yGs"
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 module.exports.index = (req, res) => {
@@ -105,7 +104,7 @@ module.exports.updateAvatar = async (req, res) => {
     },
     (error, result) => {
       db.get("users")
-        .find({ _id: req.signedCookies.userId })
+        .find({ _id: authUser._id })
         .assign({ avatarUrl: result.url })
         .write();
       res.redirect("/users/profile");
