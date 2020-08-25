@@ -1,8 +1,10 @@
-const db = require("../db.js");
+const db = require("../db.js"); 
 const shortid = require("shortid");
 const dotenv = require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
+const tools = require('../tools/page.tool.js');
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -10,6 +12,7 @@ cloudinary.config({
 });
 
 module.exports.index = (req, res) => {
+  var pageNumber = parseInt(req.query.page) || 1;
   var authUser = db
     .get("users")
     .find({ _id: req.signedCookies.userId })
@@ -17,22 +20,26 @@ module.exports.index = (req, res) => {
 
   var q = req.query.q;
   var books = db.get("books").value();
+  var pageFoot;
+
   if (!q) {
-    res.render("books/index", {
-      books: books,
-      value: q,
-      user: authUser
-    });
+    pageFoot = tools.page(books,pageNumber);
+    books = tools.array(books,pageNumber);
   } else {
-    filterBooks = books.filter(val => {
+    var filterBooks = books.filter(val => {
       return val.title.toLowerCase().indexOf(q.toLowerCase()) !== -1;
     });
-    res.render("books/index", {
-      books: filterBooks,
-      value: q,
-      user: authUser
-    });
+    pageFoot = tools.page(filterBooks,pageNumber);
+    books = tools.array(filterBooks,pageNumber);
   }
+
+  res.render("books/index", {
+    books: books,
+    value: q,
+    user: authUser,
+    pageFoot: pageFoot
+  });
+
 };
 
 module.exports.add = (req, res) => {

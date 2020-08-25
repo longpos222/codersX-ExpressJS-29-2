@@ -1,11 +1,13 @@
-const db = require('../db');
+const db = require('../db'); 
 const shortid = require('shortid');
+const tools = require('../tools/page.tool.js');
 
 module.exports.index = (req, res) => {
   var transactions = db.get('transactions').value();
   var books = db.get('books').value();
   var users = db.get('users').value();
   var authUser = db.get('users').find({_id: req.signedCookies.userId}).value();
+  var pageNumber = parseInt(req.query.page) || 1;
   
   function getDetail (array, Id, tranx, att) {
     var [result] = array.filter(item => item._id == tranx[Id]);
@@ -25,19 +27,13 @@ module.exports.index = (req, res) => {
     var _id = tranx._id;
     var userName = getDetail(users,"userId",tranx,"name");
     var bookTitle = getDetail(books,"bookId",tranx,"title");
-    return {_id, userName, bookTitle};
+    var isComplete = tranx.isComplete;
+    return {_id, userName, bookTitle, isComplete};
   });
 
-  var page = parseInt(req.query.page) || 1;
-  var pageStep = 3;
-  var startPage = (page - 1) * pageStep;
-  var maxPage = transactions.length % pageStep == 0 ? Math.floor(transactions.length / pageStep) : Math.floor(transactions.length / pageStep) + 1;
-
-  var prevPage = (page-1) < 0 ? 0 : (page-1);
-  var nextPage = (page+1) > maxPage ? maxPage : (page+1);
-  var pageFoot = {prevPage, page, nextPage, maxPage};
+  pageFoot = tools.page(transactions,pageNumber);
+  transactions = tools.array(transactions,pageNumber);
   
-  transactions = transactions.slice(startPage, startPage + pageStep);
   res.render('transactions/index',{
     transactions,
     users,
@@ -72,3 +68,11 @@ module.exports.complete = (req, res) => {
   }
   res.redirect('/transactions');
 };
+module.exports.delete = (req, res) => {  
+    db
+    .get('transactions')
+    .remove({_id : req.params._id})
+    .write();
+  
+  res.redirect('/transactions');
+}

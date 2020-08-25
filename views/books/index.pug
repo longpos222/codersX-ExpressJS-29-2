@@ -1,24 +1,53 @@
 extends ../layouts/common
 
 block content
+  .content.m-3
+    form.form-inline(action="/books", method="get")
+      .form-group
+        label.mr-1(for='title') Title: 
+        input#title.form-control.mr-2(type="text", name="q", value=value, placeholder=" search book title ...")
+        button.btn.btn-info(type="submit") Search
 
-  form(action="/books", method="get")
-    label(for='title') Title: 
-    input#title(type="text", name="q", value=value)
-    button(type="submit") Search book
+    h1.text-center BOOK LIST
 
-  p Books List:
-    ul
-      each val in books
-        li= `${val.title} `
-          a(href=`/cart/add/${val._id}`) Add to cart
-          if(user)
-            a(href=`/books/${val._id}/detail`) Detail
-            a(href=`/books/${val._id}/delete`) Delete
-  if (user)
-    form(action="/books/add", method="post")
-      label(for='title') Title:
-      input#title(type="text", name="title")
-      label(for='description') Desc:
-      input#description(type="text", name="description")
-      button Add book
+    table.table
+      thead.thead-light
+        tr.text-center
+          th(scope='col') ID
+          th(scope='col') Cover
+          th(scope='col') Title
+          th(scope='col', width=550) Desctiption
+          th(scope='col') Edit
+      tbody
+        each val in books
+          tr
+            td= val._id
+            td 
+              img.rounded(src=val.coverUrl, width=70, height=100)
+            td= val.title
+            td= val.description
+            td
+              a.btn.btn-success.m-1(href=`/cart/add/${val._id}`) Add to cart
+              if(user)
+                a.btn.btn-success.m-1(href=`/books/${val._id}/detail`) Detail
+                a.btn.btn-success.m-1(href=`/books/${val._id}/delete`) Delete
+    nav
+      ul.pagination
+        if(pageFoot.prevPage != 0)
+          li.page-item
+            a.page-link(href="/books?page="+pageFoot.prevPage) &laquo;
+        li.page-item
+          a.page-link(href="/books?page="+pageFoot.pageNumber) Page #{pageFoot.pageNumber}
+        if(pageFoot.pageNumber != pageFoot.maxPage)
+          li.page-item
+            a.page-link(href="/books?page="+pageFoot.nextPage) &raquo;
+
+    if (user)
+        form.form-inline(action="/books/add", method="post")
+          .form-group.mr-3
+            label.mr-2(for='title') Title:
+            input#title.form-control(type="text", name="title")
+          .form-group.mr-3
+            label.mr-2(for='description') Description:
+            input#description.form-control.mr-3(type="text", name="description")
+            button.btn.btn-info Add book

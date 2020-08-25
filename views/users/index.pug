@@ -1,29 +1,54 @@
 extends ../layouts/common
 
 block content
-  if errors
-    each error in errors
-      p.alert.alert-danger= error
+  .content.m-3
+    if errors
+      each error in errors
+        p.alert.alert-danger= error
 
-  form(action="/users", method="get")
-    label(for='name') Name: 
-    input#name(type="text", name="q", value=value)
-    button(type="submit") Search user
-  p Users List:
-    ul
-      each val in users
-        li= `${val.name} ${val._id} ${val.email}`
-          a(href=`/users/${val._id}/delete`) Delete
-          a(href=`/users/${val._id}/update`) Update name
-  nav
-    ul.pagination
-      if(pageFoot.prevPage != 0)
-        li.page-item
-          a.page-link(href="/users?page="+pageFoot.prevPage) &laquo;
-      li.page-item
-        a.page-link(href="/users?page="+pageFoot.page) Page #{pageFoot.page}
-      if(pageFoot.nextPage != pageFoot.maxPage)
-        li.page-item
-          a.page-link(href="/users?page="+pageFoot.nextPage) &raquo;
+    form.form-inline(action="/users", method="get")
+      .form-group.mr-3
+        label.mr-1(for='name') Name: 
+        input#name.form-control.mr-1(type="text", name="q", value=value, placeholder=" search user ...")
+        button.btn.btn-info.ml-1(type="submit") Search
+        
+    h1.text-center USER LIST
+    
+    table.table
+      thead.thead-light
+        tr.text-center
+          th(scope='col') ID
+          th(scope='col') Avatar
+          th(scope='col') Name
+          th(scope='col') Email
+          th(scope='col') Phone
+          th(scope='col') User role
+          th(scope='col') Lock status
+          th(scope='col') Edit
+      tbody
+        each val in users
+          tr.text-center
+            td= val._id
+            td 
+              img.rounded-circle(src=val.avatarUrl, width=50, height=50)
+            td= val.name
+            td= val.email
+            td= val.phone
+            td= val.isAdmin == true ? "Admin" : "User"
+            td= val.wrongLoginCount == 4 ? "Account locked" : "Normal"
+            td
+              a.btn.btn-success.m-1(href=`/users/${val._id}/delete`) Delete
+              a.btn.btn-success.m-1(href=`/users/${val._id}/update`) Update 
 
-  a.btn.btn-primary(href=`/users/add`) Add new user
+    nav
+      ul.pagination
+        if(pageFoot.prevPage != 0)
+          li.page-item
+            a.page-link(href="/users?page="+pageFoot.prevPage) &laquo;
+        li.page-item
+          a.page-link(href="/users?page="+pageFoot.page) Page #{pageFoot.page}
+        if(pageFoot.nextPage != pageFoot.maxPage)
+          li.page-item
+            a.page-link(href="/users?page="+pageFoot.nextPage) &raquo;
+
+    a.btn.btn-primary(href=`/users/add`) Add new user

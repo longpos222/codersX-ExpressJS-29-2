@@ -1,12 +1,13 @@
 extends ../layouts/common
 
 block content
-
-  h3 Users details:
-  p <strong>Name:</strong> #{user.name}
-  p <strong>Email:</strong> #{user.email}
-    
-  form(action="/users/"+user._id+"/update", method="post")
-    label(for='name') New name:
-    input#name(type="text", name="name")
-    button Update user name
+  .content.m-3
+    h1.text-center Users details
+    p <strong>Name:</strong> #{user.name}
+    p <strong>Email:</strong> #{user.email}
+      
+    form(action="/users/"+user._id+"/update", method="post")
+      .form-group
+        label(for='name') New name:
+        input#name.form-control(type="text", name="name")
+      button.btn.btn-info Update

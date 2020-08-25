@@ -1,7 +1,8 @@
 const db = require("../db.js");
 const shortid = require("shortid");
+const tools = require('../tools/page.tool.js');
 
-module.exports.index = (req, res) => {
+module.exports.index = async (req, res) => {
   var authUser = db
     .get("users")
     .find({ _id: req.signedCookies.userId })
@@ -16,23 +17,30 @@ module.exports.index = (req, res) => {
   var sessionCart = !session ?  {} : session.cart;
   
   cart = Object.entries(sessionCart);
+  
   function getTitle (array, bookId, attribute) {
     var [result] = array.filter(item => item._id == bookId);
     return result[attribute];
   }
-  cartFullList = Object.fromEntries(cart.map(([key, value])=>[getTitle(books,key,'title'),value]));
+  var pageNumber = parseInt(req.query.page) || 1;
+  pageFoot = tools.page(cart,pageNumber);
+  cartFullList = tools.array(cart,pageNumber);
+  
+  cartFullList = await Object.fromEntries(cartFullList.map(([key, value])=>[getTitle(books,key,'title'),value]));
 
   res.render('cart/index',
   {
     cart: cartFullList,
-    user: authUser
+    user: authUser,
+    pageFoot: pageFoot
   });
 };
 
 module.exports.add = (req, res) => {
   var bookId = req.params._id;
   var sessionId = req.signedCookies.sessionId;
-
+  var authUser = req.signedCookies.userId;
+  
   var count = db
     .get("sessions")
     .find({ _id: sessionId })
@@ -48,12 +56,14 @@ module.exports.add = (req, res) => {
 };
 
 module.exports.borrow = (req, res) => {
+  var sessionId = req.signedCookies.sessionId;
   var session = db
     .get("sessions")
-    .find({ _id: req.signedCookies.sessionId })
+    .find({ _id: sessionId })
     .value();
 
   var cart = Object.keys(session.cart);
+
   cart.forEach(item => {
     db.get('transactions')
       .push({

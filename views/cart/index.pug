@@ -1,34 +1,32 @@
-extends ../layouts/common
+extends ../layouts/common 
 
 block content
-  if errors
-    each error in errors
-      p.alert.alert-danger= error
-  h5 Your cart:
-  ul
-    each key, val in cart
-      li= `Title: ${val}. Quantity: ${key}`
-          
-  a(href="/cart/borrow").btn.btn-primary Add transactions 
-  //- nav
-  //-   ul.pagination
-  //-     if(pageFoot.prevPage != 0)
-  //-       li.page-item
-  //-         a.page-link(href="/transactions?page="+pageFoot.prevPage) &laquo;
-  //-     li.page-item
-  //-       a.page-link(href="/transactions?page="+pageFoot.page) Page #{pageFoot.page}
-  //-     if(pageFoot.nextPage != pageFoot.maxPage)
-  //-       li.page-item
-  //-         a.page-link(href="/transactions?page="+pageFoot.nextPage) &raquo;
+  .content.m-3
+    if errors
+      each error in errors
+        p.alert.alert-danger= error
+    h1.text-center Your cart
+    
+    table.table
+      thread.thread-light
+        tr.text-center
+          th Title
+          th Quantity
+      tbody
+        each key, val in cart
+          tr
+            td= val
+            td.text-center= key
 
-  //- form(action="/transactions/add", method="post")
-  //-   label(for="userId") User name: &nbsp;
-  //-   select#userId(name="userId")
-  //-     each val in users
-  //-       option(value=val._id) #{val.name}
-    
-  //-   label(for="bookId") Book title: &nbsp;
-  //-   select#bookId(name="bookId")
-  //-     each val in books
-  //-       option(value=val._id) #{val.title}
-    
+    nav
+      ul.pagination
+        if(pageFoot.prevPage != 0)
+          li.page-item
+            a.page-link(href="/cart?page="+pageFoot.prevPage) &laquo;
+        li.page-item
+          a.page-link(href="/cart?page="+pageFoot.pageNumber) Page #{pageFoot.pageNumber}
+        if(pageFoot.pageNumber != pageFoot.maxPage)
+          li.page-item
+            a.page-link(href="/cart?page="+pageFoot.nextPage) &raquo;
+
+    a.btn.btn-primary(href="/cart/borrow") Add to transactions

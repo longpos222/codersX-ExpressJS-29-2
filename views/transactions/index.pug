@@ -1,36 +1,51 @@
 extends ../layouts/common
 
 block content
-  if errors
-    each error in errors
-      p.alert.alert-danger= error
-  p Transactions List:
-    ul
-      each val in transactions
-        li= `Tranx ID: ${val._id}. User name: ${val.userName}. Book title: ${val.bookTitle}`
-          a(href=`/transactions/${val._id}/delete`) Delete
-          a(href=`/transactions/${val._id}/complete`) Done !
-  
-  nav
-    ul.pagination
-      if(pageFoot.prevPage != 0)
-        li.page-item
-          a.page-link(href="/transactions?page="+pageFoot.prevPage) &laquo;
-      li.page-item
-        a.page-link(href="/transactions?page="+pageFoot.page) Page #{pageFoot.page}
-      if(pageFoot.page != pageFoot.maxPage)
-        li.page-item
-          a.page-link(href="/transactions?page="+pageFoot.nextPage) &raquo;
+  .content.m-3
+    if errors
+      each error in errors
+        p.alert.alert-danger= error
+    h1.text-center Transactions List
+    
+    table.table
+      thead.thead-light
+        tr.text-center
+          th(scope='col') ID
+          th(scope='col') Borrower
+          th(scope='col') Title
+          th(scope='col') Status
+          th(scope='col') Edit
+      tbody
+        each val in transactions
+          tr.text-center
+            td= val._id
+            td= val.userName       
+            td= val.bookTitle
+            td= val.isComplete == true ? "Done" : "Pending"
+            td
+              a.btn.btn-success.m-1(href=`/transactions/${val._id}/delete`) Delete
+              a.btn.btn-success.m-1(href=`/transactions/${val._id}/complete`) Done!
 
-  form(action="/transactions/add", method="post")
-    label(for="userId") User name: &nbsp;
-    select#userId(name="userId")
-      each val in users
-        option(value=val._id) #{val.name}
-    
-    label(for="bookId") Book title: &nbsp;
-    select#bookId(name="bookId")
-      each val in books
-        option(value=val._id) #{val.title}
-    
-    button Add transaction
+    nav
+      ul.pagination
+        if(pageFoot.prevPage != 0)
+          li.page-item
+            a.page-link(href="/transactions?page="+pageFoot.prevPage) &laquo;
+        li.page-item
+          a.page-link(href="/transactions?page="+pageFoot.pageNumber) Page #{pageFoot.pageNumber}
+        if(pageFoot.pageNumber != pageFoot.maxPage)
+          li.page-item
+            a.page-link(href="/transactions?page="+pageFoot.nextPage) &raquo;
+
+    form.form-inline(action="/transactions/add", method="post")
+      .form-group.mr-3
+        label.mr-1(for="userId") User name: &nbsp;
+        select#userId.form-control(name="userId")
+          each val in users
+            option(value=val._id) #{val.name}
+      .form-group
+        label.mr-1(for="bookId") Book title: &nbsp;
+        select#bookId.form-control.mr-3(name="bookId")
+          each val in books
+            option(value=val._id) #{val.title}
+      button.btn.btn-primary Add transaction

@@ -1,16 +1,19 @@
 extends ../layouts/common
 
 block content
-
-  form
-    p User information:
-    img(src=user.avatarUrl, alt="user-avatar", "width"=100, "height"=100)
-    a.btn.btn-primary(href=`/users/profile/avatar`) Update avatar
-    p= `User name: ${user.name}`
-    p= `User ID: ${user._id}`
-    p= `Phone: ${user.phone}`
-    p= `Email: ${user.email}`
-    p= `Role: ${user.role == true ? "Admin" : "User"}` 
-    a(href=`/users/${user._id}/update`) Update name
-    a(href=`/users/${user._id}/delete`) Delete account
+  .content.m-3
+    form
+      .form-group.m-3
+        h1.text-center User information
+        .div.m-2 
+          img.border.rounded-circle(src=user.avatarUrl, alt="user-avatar", "width"=100, "height"=100)
+        a.btn.btn-info(href=`/users/profile/avatar`) Update avatar
+      .form-group.m-3
+        p= `User name: ${user.name}`
+        p= `User ID: ${user._id}`
+        p= `Phone: ${user.phone}`
+        p= `Email: ${user.email}`
+        p= `Role: ${user.role == true ? "Admin" : "User"}` 
+        a.btn.btn-info.mr-2(href=`/users/${user._id}/update`) Update name
+        a.btn.btn-info(href=`/users/${user._id}/delete`) Delete account
   
