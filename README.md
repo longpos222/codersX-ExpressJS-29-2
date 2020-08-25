@@ -7,4 +7,12 @@ Bạn quyết định biến trang `/books` thành một trang không cần đă
 3) Làm chức năng thêm sách vào giỏ trước khi đăng nhập và giữ nguyên trong giỏ sau khi đã đăng nhập
 4) Nút thuê sách khi ấn vào thì toàn bộ sách sẽ được chuyển thành các `transaction`
 ***********************
-__Update:__ Re design UI using Bootstrap.
+__Update:__ Re-design UI using Bootstrap.
+***********************
+__Update:__ Add some screenshots, :grin: I know it look ugly but proudly made by me.:four_leaf_clover::four_leaf_clover::four_leaf_clover:
+1.
+![Image](public/images/ScreenShot2020-08-25-01.png)
+2.
+![Image](public/images/ScreenShot2020-08-25-02.png)
+3.
+![Image](public/images/ScreenShot2020-08-25-03.png)
