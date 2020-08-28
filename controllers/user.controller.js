@@ -1,6 +1,7 @@
-const db = require("../db");
-const shortid = require("shortid");
-const dotenv = require("dotenv").config();
+const User = require('../models/user.model.js');
+const tools = require('../tools/page.tool.js');
+
+require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
 
@@ -10,28 +11,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-module.exports.index = (req, res) => {
+module.exports.index = async (req, res) => {
   var q = req.query.q;
-  var users = db.get('users').value();
+  var users = await User.find({});
   var filterUsers = users;
-  
+  var pageNumber = parseInt(req.query.page) || 1;
+
   if(q) {
     filterUsers = users.filter((val)=>{
       return val.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
     });
   } 
 
-  var page = parseInt(req.query.page) || 1;
-  var pageStep = 3;
-  var startPage = (page - 1) * pageStep;
-  var maxPage = filterUsers.length % pageStep == 0 ? Math.floor(filterUsers.length / pageStep) : Math.floor(filterUsers.length / pageStep) + 1;
-
-  filterUsers = filterUsers.slice(startPage, startPage + pageStep);
+  pageFoot = tools.page(filterUsers,pageNumber);
+  filterUsers = tools.array(filterUsers,pageNumber);
   
-  var prevPage = (page-1) < 0 ? 0 : (page-1);
-  var nextPage = (page+1) > maxPage ? maxPage : (page+1);
-  var pageFoot = {prevPage, page, nextPage, maxPage};
-
   res.render('users/index',{
     users: filterUsers,
     value: q,
@@ -43,70 +37,72 @@ module.exports.add = (req, res) => {
   res.render('users/add');
 }; 
 
-module.exports.postAdd = (req, res) => {
-  req.body._id = shortid();
-  db.get('users').push(req.body).write();
+module.exports.postAdd = async (req, res) => {
+  await User.findOneAndUpdate({
+    name: req.body.name,
+    email: req.body.email  
+  },
+  {
+    name: req.body.name,
+    email: req.body.email
+  },
+  {
+    upsert: true
+  });
   res.redirect('/users');
 }; 
 
-module.exports.delete = (req, res) => {
-  db.get('users').remove({_id : req.params._id}).write();
+module.exports.delete = async (req, res) => {
+  await User.findByIdAndDelete(req.params._id);
   res.redirect('/users');
 };
 
-module.exports.update = (req, res) => {
-  var [user] = db.get('users').filter({_id : req.params._id}).value();
+module.exports.update = async (req, res) => {
+  var user = await User.findById(req.params._id);
   res.render('users/update',{
     user: user
   });
 };
 
-module.exports.postUpdate = (req, res) => {
-  db.get('users')
-  .find({_id : req.params._id})
-  .assign({name: req.body.name})
-  .write();
+module.exports.postUpdate = async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.params._id,
+    {
+      name: req.body.name
+    }
+  );
   res.redirect('/users');
 };
 
-module.exports.profile = (req, res) => {
-  var authUser = db
-    .get('users')
-    .find({_id: req.signedCookies.userId})
-    .value();
-
+module.exports.profile = async (req, res) => {
+  var authUser = await User.findById(req.signedCookies.userId);
   res.render('users/profile',{
     users: authUser
   });
 };
 
-module.exports.avatar = (req, res) => {
-  var authUser = db
-    .get('users')
-    .find({_id: req.signedCookies.userId})
-    .value();
-
+module.exports.avatar = async (req, res) => {
+  var authUser = await User.findById(req.signedCookies.userId);
   res.render('users/avatar',{
     users: authUser
   });
 };
 
 module.exports.updateAvatar = async (req, res) => {
-  var authUser = db
-    .get("users")
-    .find({ _id: req.signedCookies.userId })
-    .value();
+  var authUser = await User.findById(req.signedCookies.userId);
 
   let cld_upload_stream = await cloudinary.uploader.upload_stream(
     {
       public_id: authUser._id + "_avatar",
       invalidate: true
     },
-    (error, result) => {
-      db.get("users")
-        .find({ _id: authUser._id })
-        .assign({ avatarUrl: result.url })
-        .write();
+    async (error, result) => {
+      await User.findByIdAndUpdate(
+        authUser._id,
+        {
+          avatarUrl: result.ur
+        }
+      );
       res.redirect("/users/profile");
     }
   );

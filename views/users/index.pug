@@ -46,8 +46,8 @@ block content
           li.page-item
             a.page-link(href="/users?page="+pageFoot.prevPage) &laquo;
         li.page-item
-          a.page-link(href="/users?page="+pageFoot.page) Page #{pageFoot.page}
-        if(pageFoot.nextPage != pageFoot.maxPage)
+          a.page-link(href="/users?page="+pageFoot.pageNumber) Page #{pageFoot.pageNumber}
+        if(pageFoot.pageNumber != pageFoot.maxPage)
           li.page-item
             a.page-link(href="/users?page="+pageFoot.nextPage) &raquo;
 

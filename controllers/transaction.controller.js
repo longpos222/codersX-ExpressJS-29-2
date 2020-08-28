@@ -1,40 +1,46 @@
-const db = require('../db'); 
-const shortid = require('shortid');
+const Transaction = require('../models/transaction.model.js');
+const User = require('../models/user.model.js');
+const Book = require('../models/book.model.js');
+
 const tools = require('../tools/page.tool.js');
 
-module.exports.index = (req, res) => {
-  var transactions = db.get('transactions').value();
-  var books = db.get('books').value();
-  var users = db.get('users').value();
-  var authUser = db.get('users').find({_id: req.signedCookies.userId}).value();
-  var pageNumber = parseInt(req.query.page) || 1;
+module.exports.index = async (req, res) => {
+  var transactions = await Transaction.find({});
+  var books = await Book.find({});
+  var users = await User.find({});
   
-  function getDetail (array, Id, tranx, att) {
-    var [result] = array.filter(item => item._id == tranx[Id]);
-    return result[att];
-  }
+  var userId = req.signedCookies.userId;
+  var authUser = await User.findById(userId);
+  var pageNumber = parseInt(req.query.page) || 1;
 
-  if(!authUser.isAdmin) {
-    transactions =
-      db.get('transactions')
-        .filter({userId: req.signedCookies.userId})
-        .value();
+  function getDetail(array, Id, tranx, att) {
+    var result = array.filter(item => item._id == tranx[Id]);
+    var userName = result.map(x => x[att]);    
+    return userName;
+  }
+  
+  if (!authUser.isAdmin) {
+    transactions = await Transaction.find({ userId: userId });
   } else {
     transactions = transactions;
   }
   
-  transactions = transactions.map(tranx => {
-    var _id = tranx._id;
-    var userName = getDetail(users,"userId",tranx,"name");
-    var bookTitle = getDetail(books,"bookId",tranx,"title");
-    var isComplete = tranx.isComplete;
-    return {_id, userName, bookTitle, isComplete};
-  });
+  if (transactions) {
+    transactions = transactions.map(tranx => {
+      var _id = tranx._id;
+      var userName = getDetail(users, 'userId', tranx, 'name');
+      var bookTitle = getDetail(books, 'bookId', tranx, 'title');
+      var isComplete = tranx.isComplete;
+      return { _id, userName, bookTitle, isComplete };
+    });
+  } else {
+    transactions = {};
+  }
 
-  pageFoot = tools.page(transactions,pageNumber);
-  transactions = tools.array(transactions,pageNumber);
-  
-  res.render('transactions/index',{
+  pageFoot = tools.page(transactions, pageNumber);
+  transactions = tools.array(transactions, pageNumber);
+
+  res.render('transactions/index', {
     transactions,
     users,
     books,
@@ -42,37 +48,46 @@ module.exports.index = (req, res) => {
   });
 };
 
-module.exports.add = (req, res) => {
-  req.body._id = shortid();
-  db.get('transactions').push(req.body).write();
+module.exports.add = async (req, res) => {
+  await Transaction.findOneAndUpdate({
+    userId: req.body.userId,
+    bookId: req.body.bookId
+  },
+  {
+    userId: req.body.userId,
+    bookId: req.body.bookId
+  },
+  {
+    upsert: true
+  });
   res.redirect('/transactions');
 };
 
-module.exports.complete = (req, res) => {  
-  var transactions = db
-    .get('transactions')
-    .find({_id : req.params._id})
-    .value();
+module.exports.complete = async (req, res) => {
+  var transaction = await Transaction.findById(req.params._id);
 
-  if(!transactions) {
-    res.send('<h2>ID is not existed.</h2></br><h2><a href="/">Home Page</a></h2>')
+  if (!transaction) {
+    res.send(
+      '<h2>ID is not existed.</h2></br><h2><a href="/">Home Page</a></h2>'
+    );
     return;
   }
-    
-  if(!transactions.isComplete){
-    db
-    .get('transactions')
-    .find({_id : req.params._id})
-    .assign({isComplete: true})
-    .write();
+
+  if (!transaction.isComplete) {
+    var a = await Transaction.findByIdAndUpdate(
+      req.params._id,
+      {
+        isComplete: true
+      },
+      {
+        upsert: true
+      }
+    );
   }
+  res.redirect("/transactions");
+};
+
+module.exports.delete = async (req, res) => {
+  await Transaction.findByIdAndDelete(req.params._id);
   res.redirect('/transactions');
 };
-module.exports.delete = (req, res) => {  
-    db
-    .get('transactions')
-    .remove({_id : req.params._id})
-    .write();
-  
-  res.redirect('/transactions');
-}

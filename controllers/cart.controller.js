@@ -1,28 +1,28 @@
-const db = require("../db.js");
-const shortid = require("shortid");
+const User = require('../models/user.model.js');
+const Session = require('../models/session.model.js');
+const Book = require('../models/book.model.js');
+const Transaction = require('../models/transaction.model.js');
+
 const tools = require('../tools/page.tool.js');
 
+
 module.exports.index = async (req, res) => {
-  var authUser = db
-    .get("users")
-    .find({ _id: req.signedCookies.userId })
-    .value();
-  
-  var session = db
-    .get("sessions")
-    .find({ _id: req.signedCookies.sessionId })
-    .value();
-  
-  var books = db.get('books').value();
-  var sessionCart = !session ?  {} : session.cart;
-  
-  cart = Object.entries(sessionCart);
-  
+  var authUser = await User.findById(req.signedCookies.userId);
+  var session = await Session.findById(req.signedCookies.sessionId);
+  var books = await Book.find();
+  var pageNumber = parseInt(req.query.page) || 1;     
+  var cart;
+  if(!session || !session.cart) {
+    cart = [];
+  } else {
+    cart = Object.entries(session.cart);
+  }
+
   function getTitle (array, bookId, attribute) {
     var [result] = array.filter(item => item._id == bookId);
     return result[attribute];
   }
-  var pageNumber = parseInt(req.query.page) || 1;
+  
   pageFoot = tools.page(cart,pageNumber);
   cartFullList = tools.array(cart,pageNumber);
   
@@ -36,48 +36,53 @@ module.exports.index = async (req, res) => {
   });
 };
 
-module.exports.add = (req, res) => {
+module.exports.add = async (req, res) => {
   var bookId = req.params._id;
   var sessionId = req.signedCookies.sessionId;
-  var authUser = req.signedCookies.userId;
+  if (!sessionId) {
+    res.redirect("/books");
+  }
+  //=========================
+  //await Session.findByIdAndUpdate(sessionId, { $push: { cart: { bookId : 10 } }}, { upsert: true });
+  // => cách này tạo ra cart là 1 array bên trong 'cart' chưa các object đơn lẻ (key: value)
+  //========================
+  //await Session.findByIdAndUpdate(sessionId, { $inc: {[`cart.${bookId}`] : 1} }, { upsert: true });
+  // => cách này tạo ra cart là 1 object bên trong cart chưa 1 object gồm nhiều key: value 
+  //==========================
   
-  var count = db
-    .get("sessions")
-    .find({ _id: sessionId })
-    .get("cart." + bookId, 0)
-    .value();
-
-  db.get("sessions")
-    .find({ _id: sessionId })
-    .set("cart." + bookId, count + 1)
-    .write();
-
+  var isExist = await Session.findOne({_id : sessionId, [`cart.${bookId}`]: {$exists : true}});
+  
+  if(!isExist) {
+    await Session.findOneAndUpdate({_id: sessionId}, { $set:  { [`cart.${bookId}`] : 0 } }, { upsert: true });
+  }
+  await Session.findOneAndUpdate({_id: sessionId},{$inc: {[`cart.${bookId}`] : 1 }});
+  
   res.redirect("/books");
 };
 
-module.exports.borrow = (req, res) => {
+module.exports.borrow = async (req, res) => {
   var sessionId = req.signedCookies.sessionId;
-  var session = db
-    .get("sessions")
-    .find({ _id: sessionId })
-    .value();
+  var userId = req.signedCookies.userId;
+  var session = await Session.findById(sessionId);
+  var sessionCart = session.cart || {};
 
-  var cart = Object.keys(session.cart);
-
-  cart.forEach(item => {
-    db.get('transactions')
-      .push({
-        _id: shortid(),
-        userId: session.userId,
-        bookId: item,
-        isComplete: false
-      })
-      .write();
+  var cart = Object.keys(sessionCart);
+  var user = await User.findById(userId);
+  
+  if(!user) {
+    res.redirect('/auth/login');
+    return;
+  }
+  
+  var result = cart.map(item => {
+    return {
+      "userId": userId,
+      "bookId": item,
+      "isComplete": true
+    };
   });
 
-  db.get('sessions')
-    .remove({_id: req.signedCookies.sessionId})
-    .write();
-    
+  await Transaction.insertMany(result);
+  await Session.findByIdAndDelete(sessionId);
   res.redirect('/transactions');
 };

@@ -1,14 +1,12 @@
-const shortid = require('shortid');
-const db = require('../db');
+const Session =  require('../models/session.model.js');
 
-module.exports.create = (req, res, next) => {
-  var sessionId = shortid();
-
+module.exports.create = async (req, res, next) => {
   if(!req.signedCookies || !req.signedCookies.sessionId) {
-    db.get('sessions')
-    .push({"_id": sessionId, "cart": {}})
-    .write();
-    res.cookie('sessionId', sessionId, {signed : true});
+    var [session] = await Session.insertMany({});
+    //var session = await Session.create({ });
+    //same way
+
+    res.cookie('sessionId', session._id, { signed : true });
   }
 
   next();

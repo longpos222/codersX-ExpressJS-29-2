@@ -4,7 +4,6 @@ const userMiddleware = require('../middlewares/user.middleware');
 const multer = require('multer');
 const upload = multer({storage: multer.memoryStorage()});
 
-
 router.get('/', controller.index);
 router.get('/add', controller.add);
 router.post('/add', userMiddleware.validateNewUser, controller.postAdd); 

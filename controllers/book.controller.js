@@ -1,9 +1,10 @@
-const db = require("../db.js"); 
-const shortid = require("shortid");
-const dotenv = require("dotenv").config();
+require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
 const tools = require('../tools/page.tool.js');
+
+const Book = require('../models/book.model.js');
+const User = require('../models/user.model.js');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -11,15 +12,11 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-module.exports.index = (req, res) => {
+module.exports.index = async (req, res) => {
   var pageNumber = parseInt(req.query.page) || 1;
-  var authUser = db
-    .get("users")
-    .find({ _id: req.signedCookies.userId })
-    .value();
-
+  var authUser = await User.findById(req.signedCookies.userId);
   var q = req.query.q;
-  var books = db.get("books").value();
+  var books = await Book.find({});
   var pageFoot;
 
   if (!q) {
@@ -42,26 +39,27 @@ module.exports.index = (req, res) => {
 
 };
 
-module.exports.add = (req, res) => {
-  req.body._id = shortid();
-  db.get("books")
-    .push(req.body)
-    .write();
+module.exports.add = async (req, res) => {
+  await Book.findOneAndUpdate({
+    title: req.body.title,
+    description: req.body.description
+  },
+  {
+    title: req.body.title,
+    description: req.body.description
+  },{
+    upsert: true
+  });
   res.redirect("/books");
 };
 
-module.exports.delete = (req, res) => {
-  db.get("books")
-    .remove({ _id: req.params._id })
-    .write();
+module.exports.delete = async (req, res) => {
+  await Book.findByIdAndDelete(req.params._id);
   res.redirect("/books");
 };
 
-module.exports.detail = (req, res) => {
-  var [book] = db
-    .get("books")
-    .filter({ _id: req.params._id })
-    .value();
+module.exports.detail = async (req, res) => {
+  var book = await Book.findById(req.params._id);
   res.render("books/detail", {
     book: book
   });
@@ -69,22 +67,15 @@ module.exports.detail = (req, res) => {
 
 module.exports.postUpdate = async (req, res) => {
   var title = req.body.title;
-  var book = db
-    .get("books")
-    .find({ _id: req.params._id })
-    .value();
-
+  var book = await Book.find({ _id: req.params._id });
   var cld_upload_stream = await cloudinary.uploader.upload_stream(
     {
       public_id: book._id + "_cover",
       invalidate: true
     },
-    (error, result) => {
-      if (result) {
-        db.get("books")
-          .find({ _id: book._id })
-          .assign({ coverUrl: result.url })
-          .write();
+    async (error, result) => {
+      if (result) {        
+        await Book.findByIdAndUpdate(req.params._id,{ coverUrl: result.url });
       }
       res.redirect("/books/" + book._id + "/detail");
     }
@@ -95,23 +86,20 @@ module.exports.postUpdate = async (req, res) => {
       book: book,
       errors: ["Please key in new title or choose new book cover!"]
     });
+    return;
   }
 
   if (req.file && !req.body.title) {
     streamifier.createReadStream(req.file.buffer).pipe(cld_upload_stream);
+    return;
   }
 
   if (!req.file && req.body.title) {
-    db.get("books")
-      .find({ _id: req.params._id })
-      .assign({ title: title })
-      .write();
+    await Book.findByIdAndUpdate(req.params._id,{ title: title });
     res.redirect("/books/" + book._id + "/detail");
+    return;
   }
   //Last case:
-  db.get("books")
-    .find({ _id: req.params._id })
-    .assign({ title: title })
-    .write();
+  await Book.findByIdAndUpdate(req.params._id,{ title: title });
   streamifier.createReadStream(req.file.buffer).pipe(cld_upload_stream);
 };

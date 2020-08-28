@@ -1,6 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+//---
+//=>give the object after update was applied
+mongoose.set('returnOriginal', false);
+//----
+mongoose.connect(process.env.MONGO_DB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+});
+const db1 = mongoose.connection;
+db1.on('error', console.error.bind(console, 'connection error:'));
+db1.once('open', function() {
+ console.log(`we\'re connected to dbs!`);
+});
 
 const indexRoute = require('./routers/index.route.js');
 const bookRoute = require('./routers/book.route.js');

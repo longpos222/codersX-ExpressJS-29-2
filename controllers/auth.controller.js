@@ -1,4 +1,6 @@
-const db = require('../db.js');
+const User = require('../models/user.model.js');
+const Session = require('../models/session.model.js');
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 require('dotenv').config();
@@ -12,7 +14,7 @@ module.exports.login = (req, res) => {
 
 module.exports.postLogin = async (req, res) => {
   var errors = [];
-  var authUser = db.get('users').find({name: req.body.name}).value();
+  var authUser = await User.findOne({name: req.body.name});
 
   if(!authUser) {
     res.render('auth/login',{
@@ -26,8 +28,7 @@ module.exports.postLogin = async (req, res) => {
     to: authUser.email,
     from: process.env.SENDGRID_EMAIL,
     subject: "Security alert: new or unusual login",
-    text:
-      "Looks like there was a login attempt from a new device or location. Your account has been locked.",
+    text: "Looks like there was a login attempt from a new device or location. Your account has been locked.",
     html: "<strong>Your account has been locked.</strong>"
   };
 
@@ -39,26 +40,19 @@ module.exports.postLogin = async (req, res) => {
     });
     return;
   }
-  var result = await bcrypt.compare(req.body.password, authUser.password);
+  var result = await bcrypt.compare(req.body.password, authUser._doc.password);
 
   if(!result) {
-    db.get('users')
-    .find({name: req.body.name})
-    .update('wrongLoginCount', n => n + 1)
-    .write();
-
+    await User.findByIdAndUpdate({name: req.body.name}, {$inc: { wrongLoginCount: 1 }});
+    
     res.render('auth/login',{
       errors: ['Wrong password.'],
       user: authUser
     });
     return;
   }
-
-  db.get('sessions')
-    .find({_id: req.signedCookies.sessionId})
-    .assign({"userId": authUser._id})
-    .write();
-
+  await Session.findByIdAndUpdate(req.signedCookies.sessionId,{"userId": authUser._id});
+ 
   res.cookie('userId', authUser._id, {signed: true});
   res.redirect('/transactions/');
 };

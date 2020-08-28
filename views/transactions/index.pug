@@ -35,7 +35,7 @@ block content
           a.page-link(href="/transactions?page="+pageFoot.pageNumber) Page #{pageFoot.pageNumber}
         if(pageFoot.pageNumber != pageFoot.maxPage)
           li.page-item
-            a.page-link(href="/transactions?page="+pageFoot.nextPage) &raquo;
+            a.page-link(href="/transactions?page="+pageFoot.nextPage) &raquo; 
 
     form.form-inline(action="/transactions/add", method="post")
       .form-group.mr-3

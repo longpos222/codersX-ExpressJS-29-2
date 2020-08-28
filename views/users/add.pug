@@ -5,7 +5,9 @@ block content
     if errors
       each error in errors
         p.alert.alert-danger= error
+
     h1.text-center ADD NEW USER
+    
     form.form-inline(action="/users/add", method="post")
       .form-group.mr-3
         label.mr-1(for='name') Name:
