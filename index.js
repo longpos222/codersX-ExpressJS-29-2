@@ -13,9 +13,9 @@ mongoose.connect(process.env.MONGO_DB_URL, {
   useUnifiedTopology: true,
   useFindAndModify: false
 });
-const db1 = mongoose.connection;
-db1.on('error', console.error.bind(console, 'connection error:'));
-db1.once('open', function() {
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
  console.log(`we\'re connected to dbs!`);
 });
 
@@ -25,6 +25,8 @@ const transactionRoute = require('./routers/transaction.route.js');
 const userRoute = require('./routers/user.route.js');
 const authRoute = require('./routers/auth.route.js');
 const cartRoute = require('./routers/cart.route.js');
+const apiTransactionRoute = require('./api/routers/transaction.route.js');
+const apiAuthRoute = require('./api/routers/auth.route.js');
 
 const sessionMiddleware = require('./middlewares/session.middleware');
 const authMiddleware = require('./middlewares/auth.middleware');
@@ -38,7 +40,7 @@ app.set('view engine','pug');
 app.use(express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
-app.use(cookieParser("codersx"));
+app.use(cookieParser(process.env.SIGNED_COOKIE_KEY));
 app.use(sessionMiddleware.create);
 //app.use(cookieMiddleware.countCookie);
 
@@ -48,5 +50,9 @@ app.use('/transactions', authMiddleware.authRequire, transactionRoute);
 app.use('/users', authMiddleware.authRequire,  userRoute);
 app.use('/auth', authRoute);
 app.use('/cart', cartRoute);
+
+app.use('/api/auth', apiAuthRoute);
+app.use('/api/transactions', apiTransactionRoute);
+
 
 app.listen(port,()=>console.log(`OK http://localhost:${port}`));
