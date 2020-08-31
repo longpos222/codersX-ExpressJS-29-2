@@ -1,18 +1,25 @@
-const User = require('../../models/user.model.js');
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-require('dotenv').config();
 module.exports.apiAuthRequire = async (req, res, next) => {
-  var header = req.headers.authorization;
-  if(!header) {
-    res.status(403).send('Header is unvalid.');
+  var accessTokenKey = req.signedCookies.accessTokenKey;
+  console.log(accessTokenKey);
+  
+  if (accessTokenKey == "log_out") {
+    res.status(403).send("You are logout. Please log in again.");
     return;
   }
-  var accessTokenKey = header.split(" ")[1];
-  
+
+  if (!accessTokenKey) {
+    res.status(403).send("Token is invalid.");
+    return;
+  }
+  // accessTokenKey = accessTokenKey.split(" ")[1];
   var isAuth = await jwt.verify(accessTokenKey, process.env.ACCESS_TOKEN_KEY);
-  if(!isAuth) {
-    res.status(403).send('Could not connect to the protected route');
+  console.log(`!: ${!isAuth} va ${!!  isAuth}`);
+  if (!isAuth) {
+    res.status(403).send("Could not connect to the protected route");
+    return;
   }
   req.name = isAuth.name;
   next();

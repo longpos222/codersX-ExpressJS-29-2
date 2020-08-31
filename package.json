@@ -15,6 +15,7 @@
   "mongoose": "^5.10.0",
   "multer": "^1.4.2",
   "pug": "^3.0.0",
+  "redis": "^3.0.2",
   "streamifier": "^0.1.1"
  },
  "devDependencies": {
