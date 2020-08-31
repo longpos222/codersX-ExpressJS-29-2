@@ -15,10 +15,11 @@
   "mongoose": "^5.10.0",
   "multer": "^1.4.2",
   "pug": "^3.0.0",
-  "redis": "^3.0.2",
-  "streamifier": "^0.1.1"
+  "streamifier": "^0.1.1",
+  "swagger-ui-express": "^4.1.4"
  },
  "devDependencies": {
+  "express-swagger-generator": "^1.1.17",
   "nodemon": "^2.0.4"
  }
 }

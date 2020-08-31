@@ -1,8 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
 const mongoose = require("mongoose");
 require("dotenv").config();
+var path = require('path');
 
 //---
 //=>give the object after update was applied
@@ -39,6 +43,8 @@ app.set("views", "./views");
 app.set("view engine", "pug");
 
 app.use(express.static("public"));
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.SIGNED_COOKIE_KEY));
@@ -51,6 +57,7 @@ app.use("/users", authMiddleware.authRequire, userRoute);
 app.use("/auth", authRoute);
 app.use("/cart", cartRoute);
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/auth", apiAuthRoute);
 app.use("/api/transactions", apiAuthMiddleware, apiTransactionRoute);
 

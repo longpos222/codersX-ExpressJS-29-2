@@ -1,0 +1,418 @@
+{
+  "tags": [
+    {
+      "name": "/auth"
+    },
+    {
+      "name": "/transactions"
+    }
+  ],
+  "swagger": "2.0",
+  "securityDefinitions": {
+  },
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/transactions/{_id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "header",
+            "default": "Bearer {token}",
+            "name": "Authorization",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": "/{transaction-id}",
+        "deprecated": false,
+        "responses": {
+          "200": {
+            "headers": {
+            },
+            "description": ""
+          }
+        },
+        "description": "Get info of Tranx ID",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "/transactions"
+        ],
+        "operationId": "/{transaction-id}"
+      },
+      "patch": {
+        "parameters": [
+          {
+            "in": "header",
+            "default": "Bearer {token}",
+            "name": "Authorization",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": "/{transaction-id}",
+        "deprecated": false,
+        "responses": {
+          "200": {
+            "headers": {
+            },
+            "description": ""
+          }
+        },
+        "description": "Update status by Tranx ID",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "/transactions"
+        ],
+        "operationId": "Patch/{transaction-id}"
+      },
+      "delete": {
+        "parameters": [
+          {
+            "in": "header",
+            "default": "Bearer {token}",
+            "name": "Authorization",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": "/{transaction-id}",
+        "deprecated": false,
+        "responses": {
+          "200": {
+            "headers": {
+            },
+            "description": ""
+          }
+        },
+        "description": "Delete Tranx by ID",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "/transactions"
+        ],
+        "operationId": "Delete/{transaction-id}"
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "parameters": [
+          {
+            "description": "",
+            "in": "formData",
+            "name": "name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "format": "int32",
+            "description": "",
+            "in": "formData",
+            "name": "password",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "summary": "/login",
+        "security": [
+        ],
+        "deprecated": false,
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "default": "W/\"a8-cmCwEphmkFHaCaR3Uc2HVxeNUJI\""
+              },
+              "Connection": {
+                "type": "string",
+                "default": "keep-alive"
+              },
+              "X-Proxyman-Map-Local": {
+                "type": "string",
+                "default": "Serve from remote server: http://domain.com:3000/api/auth/login"
+              },
+              "Date": {
+                "type": "string",
+                "default": "Sun, 30 Aug 2020 18:07:40 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "168"
+              },
+              "X-Powered-By": {
+                "type": "string",
+                "default": "Express"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/Auth"
+            },
+            "examples": {
+              "application/json; charset=utf-8": {
+                "accessTokenKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibG9uZyIsImlhdCI6MTU5ODgxMDg2MCwiZXhwIjoxNTk4ODE0NDYwfQ.NXQWyL59xiuKF-HlG7pAK3zGQCMCXJrum6o0VHXONDQ"
+              }
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "tags": [
+          "/auth"
+        ],
+        "operationId": "/login"
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "parameters": [
+          {
+            "in": "header",
+            "default": "Bearer {token}",
+            "name": "Authorization",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "summary": "/logout",
+        "deprecated": false,
+        "responses": {
+          "200": {
+            "headers": {
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "/auth"
+        ],
+        "operationId": "/logout"
+      }
+    },
+    "/transactions": {
+      "get": {
+        "parameters": [
+          {
+            "in": "header",
+            "default": "Bearer {token}",
+            "name": "Authorization",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "summary": "/",
+        "deprecated": false,
+        "responses": {
+          "200": {
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "default": "W/\"287-H+Vw91BuDY1nxXWwaxrTa/BkEBM\""
+              },
+              "Connection": {
+                "type": "string",
+                "default": "keep-alive"
+              },
+              "X-Proxyman-Map-Local": {
+                "type": "string",
+                "default": "Serve from remote server: http://domain.com:3000/api/transactions"
+              },
+              "Date": {
+                "type": "string",
+                "default": "Sun, 30 Aug 2020 18:08:25 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "647"
+              },
+              "X-Powered-By": {
+                "type": "string",
+                "default": "Express"
+              }
+            },
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Transactions"
+              }
+            },
+            "examples": {
+              "application/json; charset=utf-8": [
+                {
+                  "isComplete": true,
+                  "bookTitle": "Đắc Nhân Tâm",
+                  "_id": "5f48fe087e35f527a4565e22",
+                  "userName": "sau"
+                },
+                {
+                  "isComplete": true,
+                  "bookTitle": "Đắc Nhân Tâm",
+                  "_id": "5f48fe179546ff141dde6fcd",
+                  "userName": "long"
+                },
+                {
+                  "isComplete": true,
+                  "bookTitle": "Hành Trình Về Phương Đông",
+                  "_id": "5f48fe179546ff141dde6fce",
+                  "userName": "long"
+                },
+                {
+                  "_id": "5f48fe217e35f527a4565e5a",
+                  "bookTitle": "Hành Trình Về Phương Đông",
+                  "userName": "sau"
+                },
+                {
+                  "isComplete": true,
+                  "bookTitle": "Đắc Nhân Tâm",
+                  "_id": "5f48ffc38715ae148104cc75",
+                  "userName": "mien"
+                },
+                {
+                  "isComplete": true,
+                  "bookTitle": "Hành Trình Về Phương Đông",
+                  "_id": "5f48ffc38715ae148104cc76",
+                  "userName": "mien"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        "description": "Get all transactiions info.",
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "tags": [
+          "/transactions"
+        ],
+        "operationId": "/"
+      }
+    },
+    "/transactions/add": {
+      "post": {
+        "parameters": [
+          {
+            "in": "header",
+            "default": "Bearer {token}",
+            "name": "Authorization",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "schema": {
+              "$ref": "#/definitions/Transactions"
+            },
+            "in": "body",
+            "name": "Body",
+            "required": true,
+            "description": ""
+          }
+        ],
+        "summary": "/add",
+        "deprecated": false,
+        "responses": {
+          "200": {
+            "headers": {
+            },
+            "description": ""
+          }
+        },
+        "description": "Create new transaction.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "/transactions"
+        ],
+        "operationId": "/add"
+      }
+    }
+  },
+  "host": "domain.com:3000",
+  "consumes": [
+    "application/json"
+  ],
+  "basePath": "/api",
+  "produces": [
+    "application/json"
+  ],
+  "definitions": {
+    "Transactions": {
+      "properties": {
+        "bookId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        }
+      },
+      "title": "Transactions",
+      "type": "object",
+      "example": {
+        "bookId": "5f46721f04b73610babf7965",
+        "userId": "5f478112c3bec922ec1cbd21"
+      },
+      "required": [
+        "userId",
+        "bookId"
+      ]
+    },
+    "Auth": {
+      "properties": {
+        "accessTokenKey": {
+          "type": "string"
+        }
+      },
+      "title": "Auth",
+      "type": "object",
+      "example": {
+        "accessTokenKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibG9uZyIsImlhdCI6MTU5ODgxMDg2MCwiZXhwIjoxNTk4ODE0NDYwfQ.NXQWyL59xiuKF-HlG7pAK3zGQCMCXJrum6o0VHXONDQ"
+      },
+      "required": [
+        "accessTokenKey"
+      ]
+    }
+  },
+  "info": {
+    "contact": {
+    },
+    "title": "codersX-ExpressJS-27-2",
+    "description": "API list for Express-27-02",
+    "version": "1.0"
+  }
+}
