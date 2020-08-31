@@ -1,15 +1,19 @@
-# codersX-ExpressJS-27-1
-### BÀI 1
-Sau khi đã chạy bản web một thời gian, bạn nghĩ đến việc làm app cho mobile, bạn thuê được một anh chàng làm mobile từ Silicon Valley, bạn đảm nhận phần REST API.
-Hai bên lên plan và quyết định chỉ làm 2 tính năng: đăng nhập + xem các transaction.
-Áp dụng kiến thức đã học ở bài REST API để tạo ra các endpoint sau:
+# codersX-ExpressJS-27-2
+### BÀI 2 
+Bạn quyết định làm đầy đủ chức năng cho mobile app. Hãy viết các endpoint còn lại theo suy nghĩ của bạn.
+### API list:
+Resource|POST<br>create|GET<br>read|PATCH<br>update|DELETE<br>delete|
+:-|:-:|:-:|:-:|:-:|
+`/auth/login`|log in|-|-|-|
+`/auth/logout`|log out|-|-|-|
+`/transactions`|add new |get all|-|-|
+`/transactions/{tranx-id}`|-|get info|update status|delete|
 
-`POST` `/api/login`
-`GET` `/api/transactions`
+Do bị làm lại lần thứ 2 :scream: :scream: :scream:  &nbsp; nên chỉ làm phần function `transactions`, `users` và `books` cũng khá tương tự. Ai quỡn có thể xem bài làm lần 1 full không che chức năng  :D&nbsp; tương tự ở [link github này](https://github.com/longpos222/codersX-Express-27-2).
 
 =============================
-[Link POSTMAN](https://documenter.getpostman.com/view/12247621/TVCcXpX9)
+[Link POSTMAN](https://documenter.getpostman.com/view/12247621/TVCcZVmy)
 
-Screenshot Documenter:  
+**Screenshot Documenter:**
 
-![Image](public/images/screencapture-documenter-getpostman-view-12247621-TVCcXpX9-2020-08-31-01_20_00.png)
+![Image](public/images/screencapture-documenter-getpostman-view-12247621-TVCcZVmy-2020-08-31-21_39_41.jpg)
