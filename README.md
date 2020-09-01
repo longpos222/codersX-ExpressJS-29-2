@@ -1,14 +1,10 @@
-# codersX-ExpressJS-27-3
-### BÀI 3
-Nghiên cứu Swagger để viết API documentation gửi cho anh bạn mobile engineer kia. Lưu lại những gì bạn viết vào một file gist và submit.
+# codersX-ExpressJS-28
+### BÀI 1
+Khi code server của bạn có lỗi gì đó như truy cập một property nào đó của một giá trị undefined, nó sẽ throw lỗi và server sẽ tự động render trang error cho status 500.
+1. Thử viết đoạn code sau vào một controller bất kì var a; a.b();
+2. Mở route tương ứng trên trình duyệt xem lỗi ra sao
+3. Viết 1 trang hiển thị lỗi 500 một cách đẹp mắt hơn
+=========================  
 
-
-
-Bài làm lần 1 full chức năng  :D&nbsp; tương tự ở [link gist này](https://gist.github.com/longpos222/f48b01d34f371d72e55d039e09791dc9).
-
-=============================
-[Link Gist Bài làm](https://gist.github.com/longpos222/036e54ad1a8db2ccc02c6af23009cfb7)
-
-**Screenshot Documenter:**
-
-![Image](public/images/screencapture-domain-3000-api-docs-2020-09-01-02_05_25.jpg)
+**Screenshot:**
+![Image](public/images/ScreenShot2020-09-01at2.14.00PM.png)

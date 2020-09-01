@@ -60,9 +60,15 @@ module.exports.delete = async (req, res) => {
 
 module.exports.detail = async (req, res) => {
   var book = await Book.findById(req.params._id);
+  var a; 
+  try{
+    a.b();  
   res.render("books/detail", {
     book: book
   });
+  } catch(err) {
+    res.render('errors/500.pug');
+  }
 };
 
 module.exports.postUpdate = async (req, res) => {
