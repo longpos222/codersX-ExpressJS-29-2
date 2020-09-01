@@ -12,7 +12,7 @@ var path = require('path');
 //=>give the object after update was applied
 mongoose.set("returnOriginal", false);
 //----
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
