@@ -1,7 +1,8 @@
 {
  "main": "index.js",
  "scripts": {
-  "start": "nodemon --inspect index.js --ignore /db.json"
+  "start": "node index.js",
+  "dev": "nodemon --inspect index.js"
  },
  "dependencies": {
   "@sendgrid/mail": "^7.2.4",
@@ -19,7 +20,6 @@
   "swagger-ui-express": "^4.1.4"
  },
  "devDependencies": {
-  "express-swagger-generator": "^1.1.17",
   "nodemon": "^2.0.4"
  }
 }

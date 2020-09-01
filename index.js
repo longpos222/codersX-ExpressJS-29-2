@@ -12,7 +12,7 @@ var path = require('path');
 //=>give the object after update was applied
 mongoose.set("returnOriginal", false);
 //----
-mongoose.connect(process.env.MONGO_DB_URL, {
+mongoose.connect(process.env.MONGO_DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -37,7 +37,7 @@ const authMiddleware = require("./middlewares/auth.middleware");
 const apiAuthMiddleware = require("./api/middlewares/auth.middleware.js");
 
 const app = express();
-const port = 3000;
+const port = PORT || 3000;
 
 app.set("views", "./views");
 app.set("view engine", "pug");
