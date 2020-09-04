@@ -10,6 +10,14 @@ Hệ thống của bạn nay trở thành phức tạp hơn một chút:
 
 ========================
 ### Refactor lại cấu trúc app:
+
+**Account list:**
+|name | password | role | note |
+| :--- | :----: | :----: |:---- |
+|sau| 123456 |user | Người thuê sách
+|mien|123456|shop| Người chủ shop thuê sách
+|long|123456|god| Chủ hệ thống cho thuê sách
+
 **Quyền hạn chế cho user (o is hide)**
  
 |routes| user | shop & GOD |
@@ -26,7 +34,6 @@ Hệ thống của bạn nay trở thành phức tạp hơn một chút:
 |-- search| | | |
 |---------|
 |/shop/{user-name}||||
-|-- ---- /{book-id}| | | |
 |FUNC:| | | |
 |-- add|o | | |
 |-- delete|o | | |
@@ -51,5 +58,3 @@ Hệ thống của bạn nay trở thành phức tạp hơn một chút:
 |FUNC:| | | |
 |-- add to tranx| | | |
 |/auth/login| | | |
-
-===============
