@@ -4,10 +4,12 @@ const Book = require('../models/book.model.js');
 const Transaction = require('../models/transaction.model.js');
 
 const tools = require('../tools/page.tool.js');
+const jwt = require("jsonwebtoken");
 
 
 module.exports.index = async (req, res) => {
-  var authUser = await User.findById(req.signedCookies.userId);
+  if(req.signedCookies.accessTokenKey){
+  var authUser = await jwt.verify(req.signedCookies.accessTokenKey, process.env.ACCESS_TOKEN_KEY);}
   var session = await Session.findById(req.signedCookies.sessionId);
   var books = await Book.find();
   var pageNumber = parseInt(req.query.page) || 1;     
@@ -62,21 +64,21 @@ module.exports.add = async (req, res) => {
 
 module.exports.borrow = async (req, res) => {
   var sessionId = req.signedCookies.sessionId;
-  var userId = req.signedCookies.userId;
+  var user;
+  if(req.signedCookies.accessTokenKey){
+     user = await jwt.verify(req.signedCookies.accessTokenKey, process.env.ACCESS_TOKEN_KEY);}
   var session = await Session.findById(sessionId);
   var sessionCart = session.cart || {};
-
   var cart = Object.keys(sessionCart);
-  var user = await User.findById(userId);
   
   if(!user) {
     res.redirect('/auth/login');
     return;
   }
-  
+
   var result = cart.map(item => {
     return {
-      "userId": userId,
+      "userId": user.id,
       "bookId": item,
       "isComplete": true
     };

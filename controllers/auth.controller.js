@@ -1,26 +1,23 @@
-const User = require('../models/user.model.js');
-const Session = require('../models/session.model.js');
+const User = require("../models/user.model.js");
 
-const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
-require('dotenv').config();
+require("dotenv").config();
 
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports.login = (req, res) => {
-  res.render('auth/login');
+  res.render("auth/login");
 };
 
 module.exports.postLogin = async (req, res) => {
-  var errors = [];
-  var authUser = await User.findOne({name: req.body.name});
-
-  if(!authUser) {
-    res.render('auth/login',{
-      errors: ['Username is not existed.'],
-      user: authUser
-    });
+  var name = req.body.name;
+  var password = req.body.password;
+  var authUser = await User.findOne({ name: name });
+  if (!authUser) {
+    res.status(404).send("Username is not existed.");
     return;
   }
 
@@ -28,36 +25,51 @@ module.exports.postLogin = async (req, res) => {
     to: authUser.email,
     from: process.env.SENDGRID_EMAIL,
     subject: "Security alert: new or unusual login",
-    text: "Looks like there was a login attempt from a new device or location. Your account has been locked.",
-    html: "<strong>Your account has been locked.</strong>"
+    text:
+      "Looks like there was a login attempt from a new device or location. Your account has been locked.",
+    html: "<strong>Your account has been locked.</strong>",
   };
 
-  if(authUser.wrongLoginCount > 3) {
+  if (authUser.wrongLoginCount > 3) {
     sgMail.send(msg);
-    res.render('auth/login',{
-      errors: ['Your account is locked.'],
-      user: authUser
-    });
+    res.status(403).send("Your account is locked.");
     return;
   }
-  var result = await bcrypt.compare(req.body.password, authUser._doc.password);
+  var result = await bcrypt.compare(password, authUser._doc.password);
+  if (!result) {
+    await User.findOneAndUpdate(
+      {
+        name: name,
+      },
+      {
+        $inc: { wrongLoginCount: 1 },
+      }
+    );
+    return res.status(403).send("Wrong password.");
+  }
 
-  if(!result) {
-    await User.findByIdAndUpdate({name: req.body.name}, {$inc: { wrongLoginCount: 1 }});
-    
-    res.render('auth/login',{
-      errors: ['Wrong password.'],
-      user: authUser
-    });
-    return;
-  }
-  await Session.findByIdAndUpdate(req.signedCookies.sessionId,{"userId": authUser._id});
- 
-  res.cookie('userId', authUser._id, {signed: true});
-  res.redirect('/transactions/');
+  var accessTokenKey = jwt.sign(
+    {
+      name: name,
+      id: authUser.id,
+      email: authUser.email,
+      role: authUser.role
+    },
+    process.env.ACCESS_TOKEN_KEY,
+    {
+      expiresIn: "1h",
+    }
+  );
+
+  res.cookie("accessTokenKey", accessTokenKey, {
+    signed: true,
+  });
+  res.redirect("/transactions/");
 };
 
 module.exports.logout = (req, res) => {
-  res.cookie('userId',"", {signed: true});
-  res.redirect('/auth/login');
+  res.cookie("accessTokenKey", "log_out", {
+    signed: true,
+  });
+  res.redirect("/auth/login");
 };

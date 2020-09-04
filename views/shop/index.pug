@@ -8,8 +8,8 @@ block content
         input#title.form-control.mr-2(type="text", name="q", value=value, placeholder=" search book title ...")
         button.btn.btn-info(type="submit") Search
 
-    h1.text-center= `Welcome to ${!user ? "" : user.name }store !`
     h1.text-center BOOK LIST
+
     table.table
       thead.thead-light
         tr.text-center
@@ -28,7 +28,7 @@ block content
             td= val.description
             td
               a.btn.btn-success.m-1(href=`/cart/add/${val._id}`) Add to cart
-              if(user && user.role != "user")
+              if(user)
                 a.btn.btn-success.m-1(href=`/books/${val._id}/detail`) Detail
                 a.btn.btn-success.m-1(href=`/books/${val._id}/delete`) Delete
     nav
@@ -42,7 +42,7 @@ block content
           li.page-item
             a.page-link(href="/books?page="+pageFoot.nextPage) &raquo;
 
-    if (user && user.role != "user")
+    if (user)
         form.form-inline(action="/books/add", method="post")
           .form-group.mr-3
             label.mr-2(for='title') Title:
@@ -50,4 +50,4 @@ block content
           .form-group.mr-3
             label.mr-2(for='description') Description:
             input#description.form-control.mr-3(type="text", name="description")
-          button.btn.btn-info Add book
+            button.btn.btn-info Add book

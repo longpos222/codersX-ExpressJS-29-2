@@ -17,6 +17,12 @@ module.exports.index = async (req, res) => {
   var filterUsers = users;
   var pageNumber = parseInt(req.query.page) || 1;
 
+  var user = await User.findOne({name: res.locals.user.name});
+  if(user.role != "god") {
+    res.redirect('users/profile');
+    return;
+  }
+
   if(q) {
     filterUsers = users.filter((val)=>{
       return val.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;

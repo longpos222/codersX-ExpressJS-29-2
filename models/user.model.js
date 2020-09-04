@@ -5,8 +5,10 @@ const userSchema = new mongoose.Schema({
   email: String,
   phone: String,
   isAdmin: Boolean,
+  role : String, // ['user', 'shop', 'GOD']
   wrongLoginCount: Number,
-  avatarUrl: String
+  avatarUrl: String,
+  password: String
 });
 
 const User = mongoose.model("User", userSchema);

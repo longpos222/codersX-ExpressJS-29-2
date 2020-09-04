@@ -9,8 +9,7 @@ module.exports.index = async (req, res) => {
   var books = await Book.find({});
   var users = await User.find({});
   
-  var userId = req.signedCookies.userId;
-  var authUser = await User.findById(userId);
+  var authUser = await User.findOne({name:res.locals.user.name});
   var pageNumber = parseInt(req.query.page) || 1;
 
   function getDetail(array, Id, tranx, att) {
@@ -19,11 +18,19 @@ module.exports.index = async (req, res) => {
     return userName;
   }
   
-  if (!authUser.isAdmin) {
-    transactions = await Transaction.find({ userId: userId });
+  if(authUser.role == 'user'){
+    transactions = await Transaction.find({ userId: authUser._id });
+  } else if(authUser.role == 'shop') {
+    transactions = await Transaction.find({ shopId: authUser._id });
   } else {
     transactions = transactions;
   }
+
+  // if (!authUser.isAdmin) {
+  //   transactions = await Transaction.find({ userId: authUser._id });
+  // } else {
+  //   transactions = transactions;
+  // }
   
   if (transactions) {
     transactions = transactions.map(tranx => {
@@ -49,13 +56,16 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.add = async (req, res) => {
+ var shopId = await Book.findById(req.body.bookId);
+
   await Transaction.findOneAndUpdate({
     userId: req.body.userId,
     bookId: req.body.bookId
   },
   {
     userId: req.body.userId,
-    bookId: req.body.bookId
+    bookId: req.body.bookId,
+    shopId: shopId.shopId
   },
   {
     upsert: true

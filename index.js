@@ -6,7 +6,6 @@ const swaggerDocument = require('./swagger.json');
 
 const mongoose = require("mongoose");
 require("dotenv").config();
-var path = require('path');
 
 //---
 //=>give the object after update was applied
@@ -29,12 +28,14 @@ const transactionRoute = require("./routers/transaction.route.js");
 const userRoute = require("./routers/user.route.js");
 const authRoute = require("./routers/auth.route.js");
 const cartRoute = require("./routers/cart.route.js");
+const shopRoute = require("./routers/shop.route.js");
+
 const apiTransactionRoute = require("./api/routers/transaction.route.js");
 const apiAuthRoute = require("./api/routers/auth.route.js");
+const apiAuthMiddleware = require("./api/middlewares/auth.middleware.js");
 
 const sessionMiddleware = require("./middlewares/session.middleware");
 const authMiddleware = require("./middlewares/auth.middleware");
-const apiAuthMiddleware = require("./api/middlewares/auth.middleware.js");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -43,8 +44,6 @@ app.set("views", "./views");
 app.set("view engine", "pug");
 
 app.use(express.static("public"));
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.SIGNED_COOKIE_KEY));
@@ -56,6 +55,7 @@ app.use("/transactions", authMiddleware.authRequire, transactionRoute);
 app.use("/users", authMiddleware.authRequire, userRoute);
 app.use("/auth", authRoute);
 app.use("/cart", cartRoute);
+app.use("/shop", shopRoute);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/auth", apiAuthRoute);

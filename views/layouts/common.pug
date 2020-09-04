@@ -26,8 +26,12 @@ html(lang="en")
             a.nav-link(href="/books") Books
           li.nav-item
             a.nav-link(href="/transactions") Transactions
-          li.nav-item
-            a.nav-link(href="/cart") Cart
+          if(user && user.role != "shop")
+            li.nav-item
+              a.nav-link(href="/cart") Cart
+          if(user && user.role == "shop")
+            li.nav-item
+              a.nav-link(href="/shop/"+user.id) Your shop   
           if(user)
             li.nav-item
               a.nav-link(href="/users/profile") Profile

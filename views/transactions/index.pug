@@ -36,16 +36,16 @@ block content
         if(pageFoot.pageNumber != pageFoot.maxPage)
           li.page-item
             a.page-link(href="/transactions?page="+pageFoot.nextPage) &raquo; 
-
-    form.form-inline(action="/transactions/add", method="post")
-      .form-group.mr-3
-        label.mr-1(for="userId") User name: &nbsp;
-        select#userId.form-control(name="userId")
-          each val in users
-            option(value=val._id) #{val.name}
-      .form-group
-        label.mr-1(for="bookId") Book title: &nbsp;
-        select#bookId.form-control.mr-3(name="bookId")
-          each val in books
-            option(value=val._id) #{val.title}
-      button.btn.btn-primary Add transaction
+    if(user && user.role != "user")
+        form.form-inline(action="/transactions/add", method="post")
+          .form-group.mr-3
+            label.mr-1(for="userId") User name: &nbsp;
+            select#userId.form-control(name="userId")
+              each val in users
+                option(value=val._id) #{val.name}
+          .form-group
+            label.mr-1(for="bookId") Book title: &nbsp;
+            select#bookId.form-control.mr-3(name="bookId")
+              each val in books
+                option(value=val._id) #{val.title}
+          button.btn.btn-primary Add transaction
